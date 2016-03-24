@@ -80,11 +80,11 @@ $(function(){
     );
   });
   // Find in a store - Postcode
-  var postCode = '';
-  // TO-DO: set postCode
-  ga( 'main.set', { 'dimension13': postCode } );
-  $('body').on('submit', '#stockCheckForm', function() {
+  $('body').on('click', 'button.store-locator-search', function() {
     var eventLabel = $('.updatingPdpMainsku').text().trim();
+    // Get first 3 digits of postcode entered.
+    var postCode = $('#dwfrm_storelocator_postalCode').val().substring(0,3).toUpperCase();
+    ga( 'main.set', { 'dimension13': postCode } );
     ga(
       'main.send',
       'event',
@@ -94,8 +94,11 @@ $(function(){
     );
   });
   // Find in a store - Find nearest button
-  $('body').on('click', '#stockCheckForm', function() {
+  $('body').on('click', '#nearest-store', function() {
     var eventLabel = $('.updatingPdpMainsku').text().trim();
+    // Get first 3 digits of postcode entered.
+    var postCode = $('#dwfrm_storelocator_postalCode').val().substring(0,3).toUpperCase();
+    ga( 'main.set', { 'dimension13': postCode } );
     ga(
       'main.send',
       'event',
