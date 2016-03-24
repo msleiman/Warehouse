@@ -163,6 +163,17 @@ $(function(){
       }
     }, 100);
   });
+  // Click 'Read more' link
+  $('a.morelink').click(function(){
+    var eventLabel = $('.updatingPdpMainsku').text().trim();
+    ga(
+      'main.send',
+      'event',
+      'Read more',
+      'Item page',
+      eventLabel
+    );
+  });
   // Social Share
   $('.product_details').on('click', '.social_buttons a', function(e) {
       var eventLabel = '';
