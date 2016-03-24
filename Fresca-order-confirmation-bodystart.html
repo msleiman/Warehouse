@@ -1,0 +1,510 @@
+<!-- Warehouse -->
+<script type="text/javascript" src='https://b.sli-spark.com/sli-spark.js'></script>
+
+<script type="text/javascript">
+    #set ($orderRef = $information.getRequestAttribute('orderConfirmationPB').getOrderID())
+    #set ($struqtotalPrice = 0)
+    #set ($link_skulist = "")
+    #set ($link_qlist = "")
+    #set ($link_amtlist = "")
+    #set ($link_namelist = "")
+    #set ($orderConfirmationPB = $information.getRequestAttribute("orderConfirmationPB"))
+    #set ($orderTotal = ($information.getRequestAttribute('orderConfirmationPB').getMiniBasket().getBasketTotalCalculator().getSubTotalCostWithoutCredits()))
+
+    var netTotal = '$orderTotal';
+    var OrderId = '$orderRef';
+
+    if (fire_tags == "true"){
+
+	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o), m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)})(window,document,'script','//www.google-analytics.com/analytics.js','_gaWHS');
+
+	_gaWHS('create', 'UA-337516-21');
+	_gaWHS('require', 'displayfeatures');
+	_gaWHS('require', 'linkid', 'linkid.js');
+
+	var dimensionValue = $("html").attr("data-country");
+	_gaWHS('set', 'dimension1', dimensionValue);
+
+	dimensionValue = $("html").attr("data-locality");
+	_gaWHS('set', 'dimension2', dimensionValue);
+	_gaWHS('send', 'pageview');
+
+	#set ($tax_amount = ($information.getRequestAttribute('orderConfirmationPB').getMiniBasket().getBasketTotalCalculator().getSubTotalCost() * .20))
+	var tax_amount = $tax_amount;
+
+	#set ($ga_shipping = $information.getRequestAttribute('orderConfirmationPB').getMiniBasket().getBasketTotalCalculator().getPromotedShippingCost())
+	var ga_shipping = $ga_shipping;
+
+	#set ($ga_subtotal = ($information.getRequestAttribute('orderConfirmationPB').getMiniBasket().getBasketTotalCalculator().getSubTotalCost() + $ga_shipping))
+	var ga_subtotal = $ga_subtotal;
+
+	_gaWHS('require', 'ecommerce', 'ecommerce.js');
+	_gaWHS('ecommerce:addTransaction', {
+		'id': '$orderRef',
+		'affiliation': 'Website Store',
+		'revenue': "'" + ga_subtotal + "'",
+		'shipping': "'" + ga_shipping + "'",
+		'tax': "'" + tax_amount + "'"
+	});
+
+	#foreach ($BASKET_LINE_ITEM in $information.getRequestAttribute('orderConfirmationPB').getMiniBasket().getBasketItems())
+	 	#if(!$BASKET_LINE_ITEM.getClass().getSimpleName().equals("TypedBasketItemVO") && !$BASKET_LINE_ITEM.getType().getClass().getSimpleName().equals("DeliveryBasketItemType"))
+			_gaWHS('ecommerce:addItem', {
+			  	'id': '$orderRef',
+			  	'name': '$INTERNATIONALIZATIONUTIL.getTranslatedLanguageWithFallback($BASKET_LINE_ITEM.getProduct().getSearchableProduct().getTitle(), $LANGUAGE)',
+			  	'sku': '$BASKET_LINE_ITEM.getProduct().getSku()',
+			  	'category': 'Clothing',
+			  	'price': '$BASKET_LINE_ITEM.getProduct().getUnitGrossPrice()',
+			  	'quantity': '$BASKET_LINE_ITEM.getQuantity()'
+			});
+	 	#end
+	#end
+
+	_gaWHS('ecommerce:send');
+}
+
+var bnOrderDetails = new Array();
+var prodDesc = new Array();
+var prodId = new Array();
+var bnprodId = new Array();
+var prodQty = new Array();
+var prodSp = new Array();
+var countrycode = $('html').attr('data-country');
+var link_amtlist = "";
+
+#set ($bntotalPrice = 0)
+#set ($edtotalPrice = 0)
+#set ($edOrderTotal = 0)
+#set ($edProductList = "")
+#set ($i = 0)
+#set ($items = 0)
+#set ($promo_amount = 0)
+
+#foreach ($BASKET_LINE_ITEM in $information.getRequestAttribute('orderConfirmationPB').getMiniBasket().getBasketItems())
+ 	#if(!$BASKET_LINE_ITEM.getClass().getSimpleName().equals("TypedBasketItemVO") && !$BASKET_LINE_ITEM.getType().getClass().getSimpleName().equals("DeliveryBasketItemType"))
+		#set ($items = $items + 1)
+ 	#end
+#end
+
+#set ($promo_amount = $orderConfirmationPB.miniBasket.basketTotalCalculator.unpromotedSubTotalCost - $orderConfirmationPB.miniBasket.basketTotalCalculator.subTotalCost)
+
+var promo_amount = "$promo_amount";
+var items = "$items";
+
+#foreach ($BASKET_LINE_ITEM in $information.getRequestAttribute('orderConfirmationPB').getMiniBasket().getBasketItems())
+ 	#if(!$BASKET_LINE_ITEM.getClass().getSimpleName().equals("TypedBasketItemVO") && !$BASKET_LINE_ITEM.getType().getClass().getSimpleName().equals("DeliveryBasketItemType"))
+
+		#set ($prodId = $BASKET_LINE_ITEM.getProduct().getSearchableProduct().getId())
+		#set ($bnprodId = $BASKET_LINE_ITEM.getProduct().getSearchableProduct().getAttributesValue('UNIQUE_PRODUCT_KEY'))
+		#set ($productPrc = $BASKET_LINE_ITEM.getProduct().getUnitGrossPrice())
+		#set ($productQty = $BASKET_LINE_ITEM.getQuantity())
+
+		document.write('<div class="struq_SL_DF_container" title="li" style="display:none"><div class="struq_SL_DF" title="pid">$bnprodId</div><div class="struq_SL_DF" title="qty">$productQty</div><div class="struq_SL_DF" title="tv">$productPrc</div></div>')
+
+      	#if ($i > 0)
+	    	#set ($link_skulist = $link_skulist + "|")
+	        #set ($link_qlist = $link_qlist + "|")
+	        #set ($link_amtlist = $link_amtlist + "|")
+
+			link_amtlist = link_amtlist + "|"
+
+	        #set ($link_namelist = $link_namelist + "|")
+			#set ($edProductList = $edProductList + "|")
+		#end
+
+	    #set ($link_skulist = $link_skulist + $bnprodId)
+	    #set ($link_qlist = $link_qlist + $productQty)
+		#set ($link_amt = $productPrc / 1.20)
+		#set ($link_amt = $link_amt * $productQty)
+		#set ($link_amt = $link_amt * 100)
+
+		var link_amt = Math.round($link_amt);
+		link_amt = link_amt.toString();
+		link_amtlist = link_amtlist + link_amt;
+
+	    #set ($link_namelist = $link_namelist + $INTERNATIONALIZATIONUTIL.getTranslatedLanguageWithFallback($BASKET_LINE_ITEM.getProduct().getSearchableProduct().getTitle(), $LANGUAGE ))
+	    #set ($edProductList = $edProductList + "row=$i&id=$prodId&quantity=$productQty&price=$productPrice")
+		#set ($edtotalPrice = $edtotalPrice + ($BASKET_LINE_ITEM.getProduct().getUnitGrossPrice() * $productQty))
+		#set ($prodDesc = $INTERNATIONALIZATIONUTIL.getTranslatedLanguageWithFallback($BASKET_LINE_ITEM.getProduct().getSearchableProduct().getTitle(), $LANGUAGE ))
+
+		#if ($promo_amount > 0)
+			#if ($i == $items - 1)
+				#set ($link_namelist = $link_namelist + "|Discount")
+				#set ($link_qlist = $link_qlist + "|0")
+				#set ($promo_amount = $promo_amount / 1.20)
+				#set ($promo_amount = $promo_amount * 100)
+
+				var link_promo = Math.round($promo_amount);
+				link_amtlist = link_amtlist + "|-" + link_promo;
+
+				#set ($link_skulist = $link_skulist + "|Discount")
+			#end
+		#end
+
+		bnOrderDetails[$i] = "$bnprodId:$productQty:$productPrc";
+		prodDesc[$i] = "$prodDesc";
+		bnprodId[$i] = "$bnprodId";
+		prodId[$i] = "$prodId";
+		prodQty[$i] = "$productQty";
+		prodSp[$i] = "$productPrc";
+
+ 	#else
+
+		#set ($delprodId = $BASKET_LINE_ITEM.getProduct().getSearchableProduct().getAttributesValue('UNIQUE_PRODUCT_KEY'))
+		#set ($delproductPrc = $BASKET_LINE_ITEM.getProduct().getUnitGrossPrice())
+		#set ($delproductQty = $BASKET_LINE_ITEM.getQuantity())
+	    #set ($delprodDesc = $INTERNATIONALIZATIONUTIL.getTranslatedLanguageWithFallback($BASKET_LINE_ITEM.getProduct().getSearchableProduct().getTitle(), $LANGUAGE ))
+
+		var delDec = "$delprodDesc";
+		var delId = "$delprodId";
+		var delQty = "$delproductQty";
+		var delSp = "$delproductPrc";
+
+ 	#end
+
+	#set ($bntotalPrice = ($information.getRequestAttribute('orderConfirmationPB').getMiniBasket().getBasketTotalCalculator().getSubTotalCostWithoutCredits()))
+	#set ($i = $i + 1)
+
+#end
+
+var noitems = $i;
+var bnOrderTotal = '$bntotalPrice';
+var prodTotal = bnOrderTotal - delSp;
+
+var link_skulist = "$link_skulist";
+var link_qlist = "$link_qlist";
+var link_namelist = "$link_namelist";
+
+for (j=0;j<noitems-1;j++)
+{
+	if (typeof(bnprodId[j]) != 'undefined' && bnprodId[j] != 'undefined')
+	{
+	    cmCreateShopAction9Tag(
+	    	"'"+bnprodId[j]+"'",
+	    	"'"+prodDesc[j]+"'",
+	    	"'"+prodQty[j]+"'",
+	    	"'"+prodSp[j]+"'",
+	    	"$information.getSessionAttribute("customer").getId()",
+	    	"'"+OrderId+"'",
+	    	"'"+bnOrderTotal+"'",
+	    	null,
+	    	"-_--_--_--_--_-"+countrycode+"-_--_--_--_--"+delDec+"--_--_--_--_-"
+	    	);
+	}
+}
+
+cmDisplayShops();
+
+cmCreateOrderTag(
+	"'"+OrderId+"'",
+	"'"+bnOrderTotal+"'",
+	"'"+(parseInt(delSp*100)/100)+"'",
+	"$information.getSessionAttribute("customer").getId()",
+	null,
+	null,
+	null,
+	"-_--_--_-${orderConfirmationPB.getDeliveryAddress().getTowncity()}-_-${orderConfirmationPB.getDeliveryAddress().getCountryLookup().getId()}-_-${orderConfirmationPB.getDeliveryAddress().getPostcode()}-_--_--_--_--_-$information.getRequestAttribute('orderConfirmationPB').getCurrency()-_-$information.getSessionAttribute('customer').getEmail()"
+	);
+
+cmCreateRegistrationTag(
+	"$information.getSessionAttribute("customer").getId()",
+	"$information.getSessionAttribute("customer").getEmail()",
+	null,
+	null,
+	null,
+	null,
+	null
+	);
+
+</script>
+
+<script type="text/javascript">
+	<!--
+	if (fire_tags == "true")
+	{
+		function storeEDID()
+		{
+			var thirtyDays = (60*60*1000*24)*30;
+			var vals = document.location.search;
+			start = vals.indexOf("EDID=");
+
+			if (start != -1)
+			{
+			   	var end = vals.indexOf("&", start);
+
+			   	if (end == -1)
+			   	{
+			   		end = vals.length;
+			   	}
+
+				var date = new Date();
+				date.setTime(date.getTime()+ thirtyDays);
+				document.cookie= vals.substring(start,end) + "; expires=" + date.toGMTString() + "; path=/";
+			}
+		}
+
+		function getEDID()
+		{
+		   	var n = "EDID=";
+		   	var cookies = document.cookie;
+		   	var start = cookies.indexOf(n);
+
+		   	if(start == -1)
+		   	{
+		   		return null;
+		   	}
+
+		   	start += n.length;
+		   	var end = cookies.indexOf(";", start);
+
+		   	if (end == -1)
+		   	{
+		   		end = cookies.length;
+		   	}
+
+		   	return cookies.substring(start, end);
+		}
+
+		function trackEDID(i)
+		{
+			f=getEDID();
+
+			if(f != null)
+			{
+				document.write('<img src="https://pd.ed10.net/p/0G/WHCAVJP/X61I?CEDID='+f+'&'+i+'" height=1 width=1>');
+			}
+		}
+	}
+	//-->
+</script>
+
+<script type="text/javascript">
+	if (fire_tags == "true"){
+
+		#set ($edProductList = "rows=$edProductList")
+
+		var edRows = encodeURIComponent('$edProductList');
+		var edString = "&m=$edtotalPrice&pk=$orderRef&currency=GBP&"+edRows;
+
+		trackEDID(edString);
+
+		var s,f,c=document.cookie;s=c.indexOf("ed198816550");if(s==-1) {s=c.indexOf("eds198816550")};
+
+		if(s>-1)
+		{
+			c=c.substring(s+1);
+			c=c.substring(c.indexOf("=")+1);
+			e=c.indexOf(";");
+			f=c.substring(0,e==-1? c.length:e);
+
+			document.write('<img src="https://pd.ed10.net/p/0G/1O74MPH/4Z6F?CEDID='+f+edString+'" height=1 width=1>');
+		}
+	}
+</script>
+
+<div id="tagcont"></div>
+
+<script language="javascript" type="text/javascript">
+	var spark= new SliSpark("1280", "1");
+		spark.setPageType("checkout-confirmation");
+
+	#set ($tax = $bntotalPrice * 0.20)
+
+	spark.addTransaction("$orderRef","1","$bntotalPrice","0.00","$tax");
+
+	#foreach ($BASKET_LINE_ITEM in $information.getRequestAttribute('orderConfirmationPB').getMiniBasket().getBasketItems())
+  		#if(!$BASKET_LINE_ITEM.getClass().getSimpleName().equals("TypedBasketItemVO") && !$BASKET_LINE_ITEM.getType().getClass().getSimpleName().equals("DeliveryBasketItemType"))
+		  	#set ($prodId = $BASKET_LINE_ITEM.getProduct().getSearchableProduct().getAttributesValue('UNIQUE_PRODUCT_KEY'))
+			#set ($productPrice = $BASKET_LINE_ITEM.getProduct().getUnitGrossPrice())
+			#set ($productQty = $BASKET_LINE_ITEM.getQuantity())
+			#set ($productTotal = ($BASKET_LINE_ITEM.getProduct().getUnitGrossPrice() * $productQty))
+
+			spark.addItem("$prodId","$productQty","$productTotal");
+		#end
+	#end
+
+	spark.writeTrackCode();
+	spark.writeTransactionCode();
+</script>
+
+#set ($allProducts = "")
+
+#foreach ($BASKET_LINE_ITEM in $orderConfirmationPB.getMiniBasket().getBasketItems())
+  	#if(!$BASKET_LINE_ITEM.getClass().getSimpleName().equals("TypedBasketItemVO") && !$BASKET_LINE_ITEM.getType().getClass().getSimpleName().equals("DeliveryBasketItemType"))
+		#set ($prodId = $BASKET_LINE_ITEM.getProduct().getSearchableProduct().getAttributesValue('UNIQUE_PRODUCT_KEY'))
+		#set ($productPrice = $BASKET_LINE_ITEM.getProduct().getUnitGrossPrice())
+		#set ($productTotal = $productTotal + $BASKET_LINE_ITEM.getProduct().getUnitGrossPrice())
+		#set ($productQty = $BASKET_LINE_ITEM.getQuantity())
+
+		#if ($allProducts != "")
+ 			#set ($allProducts = ${allProducts})
+		#end
+
+		#set ($allProducts = "${allProducts}&i$velocityCount=$prodId&p$velocityCount=$productPrice&q$velocityCount=$productQty")
+	#end
+#end
+
+
+<script type="text/javascript">
+/* <![CDATA[ */
+	#set ($yaOrderDetails = "")
+	#set ($prodIDList = "")
+	#set ($meTail = "")
+	#set ($yatotalPrice = 0)
+	#set ($i = 0)
+
+	#foreach ($BASKET_LINE_ITEM in $information.getRequestAttribute('orderConfirmationPB').getMiniBasket().getBasketItems())
+  		#if(!$BASKET_LINE_ITEM.getClass().getSimpleName().equals("TypedBasketItemVO") && !$BASKET_LINE_ITEM.getType().getClass().getSimpleName().equals("DeliveryBasketItemType"))
+
+			#set ($prodId = $BASKET_LINE_ITEM.getProduct().getSearchableProduct().getId())
+			#set ($bnprodId = $BASKET_LINE_ITEM.getProduct().getSearchableProduct().getAttributesValue('UNIQUE_PRODUCT_KEY'))
+			#set ($productPrice = ($BASKET_LINE_ITEM.getProduct().getUnitGrossPrice() / 1.20))
+			#set ($productQty = $BASKET_LINE_ITEM.getQuantity())
+
+			#if ($i > 0)
+				#set ($meTail = $meTail + "|")
+				#set ($yaOrderDetails = $yaOrderDetails + ",")
+				#set ($prodIDList = $prodIDList + ",")
+			#end
+
+			#set ($yaOrderDetails = $yaOrderDetails + $prodId)
+			#set ($prodIDList = $prodIDList + $bnprodId)
+			#set ($meTail = $meTail + ("sku="+$bnprodId+"&price="+$productPrice+"&qty="+$productQty))
+			#set ($yatotalPrice = $yatotalPrice + (($BASKET_LINE_ITEM.getProduct().getUnitGrossPrice()/ 1.20) * $productQty))
+			#set ($i = $i + 1)
+		#end
+	#end
+/* ]]> */
+</script>
+
+<!-- SaleCycle -->
+<img src='https://app.salecycle.com/Import/PixelCapture.aspx?c=16650&e=$information.getSessionAttribute("customer").getEmail()&sfs=orderNumber^$orderRef' />
+
+<script type="text/javascript">
+	if (fire_tags == "true"){
+		var linksharePrice = '$orderTotal';
+		var linkshareOrderID = '$orderRef';
+	        document.write('<IMG SRC="//being.successfultogether.co.uk/registersale.asp?site=7746&mode=pps&ltype=1&price='+linksharePrice+'&order='+linkshareOrderID+'"  WIDTH="1" HEIGHT="1">');
+	}
+</script>
+
+<!-- Google Code for PX - Completed Sale Conversion Page -->
+<script type="text/javascript">
+	/* <![CDATA[ */
+		var google_conversion_id = 1034273218;
+		var google_conversion_language = "en";
+		var google_conversion_format = "3";
+		var google_conversion_color = "ffffff";
+		var google_conversion_label = "lfuNCOj30gQQwoOX7QM";
+		var google_conversion_value = 0;
+
+		if ($orderTotal){
+			google_conversion_value = $orderTotal;
+		}
+	/* ]]> */
+</script>
+
+<script type="text/javascript" src="//www.googleadservices.com/pagead/conversion.js" data-keep="true"></script>
+
+<noscript>
+	<div style="display:inline;">
+		<img height="1" width="1" style="border-style:none;" alt="" src="//www.googleadservices.com/pagead/conversion/1034273218/?value=$information.getRequestAttribute('orderConfirmationPB').getMiniBasket().getBasketTotalCalculator().getSubTotalCostWithoutCredits())&amp;label=lfuNCOj30gQQwoOX7QM&amp;guid=ON&amp;script=0"/>
+	</div>
+</noscript>
+
+<!-- Google Code for Sales Value Conversion Page -->
+<script type="text/javascript">
+	/* <![CDATA[ */
+		var google_conversion_id = 988929344;
+		var google_conversion_language = "en";
+		var google_conversion_format = "2";
+		var google_conversion_color = "ffffff";
+		var google_conversion_label = "p2T0CJiAkwgQwLrH1wM";
+		var google_conversion_value = 0;
+		if ($orderTotal){
+			google_conversion_value = $orderTotal;
+		}
+	/* ]]> */
+</script>
+
+<script type="text/javascript" src="//www.googleadservices.com/pagead/conversion.js" data-keep="true"></script>
+
+<noscript>
+	<div style="display:inline;">
+		<img height="1" width="1" style="border-style:none;" alt="" src="//www.googleadservices.com/pagead/conversion/988929344/?value=$information.getRequestAttribute('orderConfirmationPB').getMiniBasket().getBasketTotalCalculator().getSubTotalCostWithoutCredits())&amp;label=p2T0CJiAkwgQwLrH1wM&amp;guid=ON&amp;script=0"/>
+	</div>
+</noscript>
+
+<script type='text/javascript'>
+	// MediaMind - Confirmation Page
+	var ebRev = '$bntotalPrice';
+	var ebOrderID = '$orderRef';
+	var ebProductID = '$prodIDList';
+	var ebProductInfo = '';
+	var ebRand = Math.random()+'';
+		ebRand = ebRand * 1000000;
+
+	//<![CDATA[
+	if (fire_tags == "true"){
+		document.write('<scr'+'ipt src="HTTPS://bs.serving-sys.com/BurstingPipe/ActivityServer.bs?cn=as&amp;ActivityID=361445&amp;rnd=' + ebRand + '&amp;Value='+ebRev+'&amp;OrderID='+ebOrderID+'&amp;ProductID='+ebProductID+'&amp;ProductInfo='+ebProductInfo+'"></scr' + 'ipt>');
+	}
+	//]]>
+</script>
+
+
+<script type="text/javascript">
+	// Fashtalking - Confirmation Page
+	if (fire_tags == "true"){
+	var ftRandom = Math.random()*1000000;
+		document.write('<iframe style="position:absolute; visibility:hidden; width:1px; height:1px;" src="https://servedby.flashtalking.com/container/2747;20320;1753;iframe/?spotName=Confirmation&ftXValue=$bntotalPrice&ftXNumItems=$i&cachebuster='+ftRandom+'"></iframe>');
+	}
+</script>
+
+<script src="//platform.twitter.com/oct.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+	twttr.conversion.trackPid('l4uch');
+</script>
+
+<noscript>
+	<img height="1" width="1" style="display:none;" alt="" src="https://analytics.twitter.com/i/adsct?txn_id=l4uch&p_id=Twitter" />
+	<img height="1" width="1" style="display:none;" alt="" src="//t.co/i/adsct?txn_id=l4uch&p_id=Twitter" />
+</noscript>
+
+<script>
+	var getGAunique = '$information.getSessionAttribute("customer").getId()';
+	var testGAunique = new RegExp(/^[\d]{3,}$/);
+	if(!testGAunique.test(getGAunique)){
+	    getGAunique = false;
+	}else{
+	    sessionStorage.getGAunique = getGAunique;
+	}
+</script>
+
+<!-- Polyvore -->
+#set ($skuList = "")
+
+#foreach ($BASKET_LINE_ITEM in $information.getRequestAttribute('orderConfirmationPB').getMiniBasket().getBasketItems())
+  	#if(!$BASKET_LINE_ITEM.getClass().getSimpleName().equals("TypedBasketItemVO") && !$BASKET_LINE_ITEM.getType().getClass().getSimpleName().equals("DeliveryBasketItemType"))
+		#set ($skuList = $skuList + $BASKET_LINE_ITEM.getProduct().getSearchableProduct().getId() + ",")
+	#end
+#end
+
+<img src="//www.polyvore.com/conversion/beacon.gif?adv=warehouse.co.uk&amt=$information.getRequestAttribute('orderConfirmationPB').getMiniBasket().getBasketTotalCalculator().getSubTotalCost()&oid=$orderRef&skus=$skuList&cur=$information.getRequestAttribute("orderConfirmationPB").getCurrency()" style="position: absolute; visibility: hidden;" />
+
+<!-- Facebook Conversion Code -->
+<script>(function() {
+  var _fbq = window._fbq || (window._fbq = []);
+  if (!_fbq.loaded) {
+    var fbds = document.createElement('script');
+    fbds.async = true;
+    fbds.src = '//connect.facebook.net/en_US/fbds.js';
+    var s = document.getElementsByTagName('script')[0];
+    s.parentNode.insertBefore(fbds, s);
+    _fbq.loaded = true;
+  }
+})();
+window._fbq = window._fbq || [];
+window._fbq.push(['track', '6035192616918', {'value':'$bntotalPrice','currency':'$information.getRequestAttribute("orderConfirmationPB").getCurrency()'}]);
+</script>
+<noscript><img height="1" width="1" alt="" style="display:none" src="https://www.facebook.com/tr?ev=6035192616918&amp;cd[value]=$bntotalPrice&amp;cd[currency]=$information.getRequestAttribute("orderConfirmationPB").getCurrency()&amp;noscript=1" /></noscript>
