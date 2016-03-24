@@ -8,4 +8,15 @@ $(function(){
       'Click - Share'
     );
   });
+
+  // Submit form to send item to a friend
+  $('body').on('click', '#send-to-friend-form .send-button', function() {
+    ga(
+      'main.send',
+      'event',
+      'Wishlist',
+      'Submit - Share'
+    );
+  });
+
 });
