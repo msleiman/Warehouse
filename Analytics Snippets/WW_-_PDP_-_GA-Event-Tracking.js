@@ -108,8 +108,20 @@ $(function(){
     );
   });
   // Size out of stock
-  $('.product-variations select.va-size-select').change(function(event) {
+  $('a.va-size-select').click(function() {
     var eventLabel = $('.updatingPdpMainsku').text().trim();
+    var sizesOutOfStock = ''; // empty string to store sizes that are OOS
+
+    $('.va-size-select-selectBox-dropdown-menu ul li').each(function(){
+      if ( $(this).hasClass('selectBox-disabled') ) { // If size is OOS
+        // Strip text from string so only the size number remains
+        var outOfStockSize = $(this).find('a').html().replace(/\D/g,'') + ' ';
+        sizesOutOfStock += outOfStockSize; // Add to string
+      }
+    });
+
+    ga( 'main.set', { 'dimension17': sizesOutOfStock } );
+
     ga(
       'main.send',
       'event',
@@ -117,6 +129,7 @@ $(function(){
       'Click',
       eventLabel
     );
+
   });
   // Next/Previous
   $('#product-nav-container').on('click', 'a', function(e) {
