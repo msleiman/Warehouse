@@ -1,16 +1,24 @@
 $(function(){
-$( '#RegistrationForm' ).on( 'blur', 'input, select, checkbox', function(){
-	ga('main.send', 'event', 'create-account', 'field_lost-focus', $( this ).attr( 'name' ) );
-});
-$( '#RegistrationForm' ).on( 'submit', function(){
-	ga('main.send', 'event', 'create-account', 'submit', $( '#dwfrm_profile_address_country' ).val() );
-});
-$( '.pg-checkout-login .right_column' ).on( 'submit', 'form', function(){
-	if ( $( '#dwfrm_login_signupnewsletter' ).is( ':checked' ) )
-	{
-		ga('main.send', 'event', 'Newsletter', 'Sign-up', window.location.href );
-	}
-});
+
+	$( '#RegistrationForm' ).on( 'blur', 'input, select, checkbox', function(){
+		ga('main.send', 'event', 'create-account', 'field_lost-focus', $( this ).attr( 'name' ) );
+	});
+
+	/* Fire the Create account submit action only when the user's registration is confirmed (i.e. when they are redirected
+		 to a url like /gb/account?registration=true). This is because they may encounter server-side validation errors
+	   before registration is confirmed, and so a normal submit action is not good enough.
+	*/
+	if (window.location.href.indexOf('registration=true') > 0) {
+		ga('main.send', 'event', 'Create account', 'Submit - Create account');
+	};
+
+	$( '.pg-checkout-login .right_column' ).on( 'submit', 'form', function(){
+		if ( $( '#dwfrm_login_signupnewsletter' ).is( ':checked' ) )
+		{
+			ga('main.send', 'event', 'Newsletter', 'Sign-up', window.location.href );
+		}
+	});
+
   // Checkout form
   $('input,select','#primary, #secondary').blur(function() {
     var eventAction = $(this).parents('form').attr('id');
