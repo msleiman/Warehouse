@@ -1,6 +1,6 @@
 $(function(){
   // Save item
-  $('.product_details .save_for_later').click(function() {
+  $('body').on('click', '.product_details .save_for_later', function() {
     var eventLabel = $('.updatingPdpMainsku').text().trim();
     ga(
       'main.send',
@@ -120,7 +120,7 @@ $(function(){
       }
     });
 
-    ga( 'main.set', { 'dimension17': sizesOutOfStock } );
+    ga( 'main.set', { 'dimension1': sizesOutOfStock } );
 
     ga(
       'main.send',
