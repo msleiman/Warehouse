@@ -10,6 +10,23 @@ $(function(){
       eventLabel
     );
   });
+
+  // Fire an event when the user hovers over the Bag link in the nav.
+  $('li#mini-cart').hover(function(){
+    // When user hovers
+    ga(
+      'main.send',
+      'event',
+      'Bag - Nav',
+      'Hover',
+      window.location.href
+    );
+  },
+  function(){
+    // When user hovers off
+  });
+
+
   $('#navigation').on('click', '.right_slot_container a', (function () {
     var eventAction = $(this).text().trim().toLowerCase();
     var eventLabel = 'Picture';
