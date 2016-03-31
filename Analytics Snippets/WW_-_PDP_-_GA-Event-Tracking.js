@@ -11,7 +11,7 @@ $(function(){
     );
   });
   // Shop the look
-  $('#shop-the-look').click(function() {
+  $('body').on('click', '#shop-the-look', function() {
     var eventLabel = $('.updatingPdpMainsku').text().trim();
     ga(
       'main.send',
