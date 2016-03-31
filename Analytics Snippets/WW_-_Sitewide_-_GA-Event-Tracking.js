@@ -26,6 +26,27 @@ $(function(){
     // When user hovers off
   });
 
+  // Fire event when the Checkout link is clicked when hovering over the Bag link in the navigation
+  $('body').on('click', '.mini-cart-link-checkout.checkout-button', function(){
+    ga(
+      'main.send',
+      'event',
+      'Bag - Nav',
+      'Checkout',
+      window.location.href
+    );
+  });
+
+  // Fire event when the View Bag link is clicked when hovering over the Bag link in the navigation
+  $('body').on('click', '.mini-cart-link-cart.checkout-button', function(){
+    ga(
+      'main.send',
+      'event',
+      'Bag - Nav',
+      'View bag',
+      window.location.href
+    );
+  });
 
   $('#navigation').on('click', '.right_slot_container a', (function () {
     var eventAction = $(this).text().trim().toLowerCase();
