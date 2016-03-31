@@ -8,7 +8,7 @@ $( '#RegistrationForm' ).on( 'submit', function(){
 $( '.pg-checkout-login .right_column' ).on( 'submit', 'form', function(){
 	if ( $( '#dwfrm_login_signupnewsletter' ).is( ':checked' ) )
 	{
-		ga('main.send', 'event', 'newsletter', 'sign-up', window.location.href );
+		ga('main.send', 'event', 'Newsletter', 'Sign-up', window.location.href );
 	}
 });
   // Checkout form
