@@ -1,4 +1,5 @@
 $(function(){
+
   $( '.header_navigation' ).on( 'click', 'li.subsubitems > ul > li > a', function(){
     var eventAction = $(this).text().trim().toLowerCase();
     var eventLabel = 'Category';
@@ -59,6 +60,7 @@ $(function(){
       eventLabel
     );
   }));
+
   $('#recently-viewed-baynote').on('click', 'a', function(e) {
     var eventLabel = $(this).parents('.product-tile').attr('data-itemid');
     ga(
@@ -69,6 +71,7 @@ $(function(){
       eventLabel
     );
   });
+
   $('#recommended_products').on('click', 'a', function(e) {
     var eventLabel = $(this).parents('.product-tile').attr('data-itemid');
     ga(
@@ -79,6 +82,7 @@ $(function(){
       eventLabel
     );
   });
+
   $('#similar_products').on('click', 'a', function(e) {
     var eventLabel = $(this).parents('.product-tile').attr('data-itemid');
     ga(
@@ -89,6 +93,7 @@ $(function(){
       eventLabel
     );
   });
+
   $('.social-links').on('click', 'a', function(e) {
     var eventLabel = $('span',this).text().trim();
     ga(
@@ -99,7 +104,23 @@ $(function(){
       eventLabel
     );
   });
+
   $( '.newsletter-signup' ).on( 'submit', '#sign-up', function(){
   	ga('main.send', 'event', 'newsletter', 'footer_submit', window.location.href );
   });
+
+  // Report all 404 errors to GA
+  setTimeout(function(){
+    if ( window.location.href.indexOf('404?') > 0 ) {
+      var brokenLinkThatUserRequested = decodeURIComponent(window.location.href.split('=').pop());
+      ga(
+        'main.send',
+        'event',
+        '404 Queries',
+        'View',
+        brokenLinkThatUserRequested
+      );
+    };
+  }, 750);
+
 });
