@@ -1,4 +1,4 @@
-{
+var digitalData = {
    "site":{
       "country":"GB",
       "language":"en_GB",
