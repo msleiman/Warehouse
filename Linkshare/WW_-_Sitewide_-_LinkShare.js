@@ -6,7 +6,7 @@
   var urlParametersArray = window.location.href.split('&');
 
   for (var i = 0; i < urlParametersArray.length; i++) {
-    if (urlParametersArray[i].indexOf('_term') > 0) {
+    if (urlParametersArray[i].indexOf('utm_term') >= 0) {
       var linkshareReferrerID = urlParametersArray[i].split('=').pop();
       console.log(linkshareReferrerID);
 
