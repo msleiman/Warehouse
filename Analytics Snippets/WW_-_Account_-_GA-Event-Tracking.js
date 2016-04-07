@@ -46,7 +46,7 @@ $(function(){
 
   // This function will send a Submit event to GA when the product is submitted to bag. We create it as a function because it
   // can be called in two different scenarios - if the item has a size chosen for it, or if the item does not have a size chosen for it.
-  function addToBagSubmitEvent(wishlistItemID) {
+  function addToBagSubmitEvent(wishlistItemID, wishlistItemName, wishlistItemCategory) {
     var clickedItemSKU = $('li#' + wishlistItemID).find('.saved_item_image > img').attr('src').split('/').pop().split('_')[1].split('.')[0];
     var daysInWishlist = $('li#' + wishlistItemID).find('.item-expiresin').text().replace(/\D/g,'');
     ga( 'main.set', { 'dimension2': daysInWishlist } );
@@ -57,6 +57,12 @@ $(function(){
       'Submit',
       clickedItemSKU
     );
+    ga('main.ec:addProduct',{
+      'id': clickedItemSKU,
+      'name': wishlistItemName,
+      'category': wishlistItemCategory,
+      'variant': clickedItemSKU.slice(-2) // Last two digits of SKU = colour ID
+    });
   }
 
   // Loop through the wishlist items and attach the appropriate click handlers, based on whether the item already has a size chosen or not.
@@ -64,11 +70,13 @@ $(function(){
   // If the item doesn't have a size chosen, attach a click event handler and a submit event handler too.
   $('li.wishlist-item').each(function(){
     var wishlistItemID = $(this).attr('id');
+    var wishlistItemName = $(this).find('.product-name a').text().trim();
+    var wishlistItemCategory = $(this).find('.product-name a').attr('href').split('/')[5]; // Get the category from the URL of the product's page.
 
     // If the wishlist item has a size specified for it, we should just attach a submit event handler.
     if ( $(this).find('.size').text().length > 0 ) {
       $(this).find('.product-action.add-to-cart').on('click', function(){
-        addToBagSubmitEvent(wishlistItemID);
+        addToBagSubmitEvent(wishlistItemID, wishlistItemName, wishlistItemCategory);
       });
     }
     // If the wishlist item DOES NOT have a size specified for it, we attach a click event listener (to trigger the option for
@@ -95,7 +103,7 @@ $(function(){
               clearInterval(refreshInterval); // Cancel the interval
               // Attach click handler
               $('li#' + wishlistItemID).find('.action-addtocart.product-action.add-to-cart').on('click', function(){
-                addToBagSubmitEvent(wishlistItemID);
+                addToBagSubmitEvent(wishlistItemID, wishlistItemName, wishlistItemCategory);
               });
             }
           }, 500);
