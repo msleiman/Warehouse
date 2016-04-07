@@ -121,7 +121,6 @@ $(function(){
     });
 
     ga( 'main.set', { 'dimension1': sizesOutOfStock } );
-
     ga(
       'main.send',
       'event',
@@ -160,6 +159,12 @@ $(function(){
           'Submit',
           eventLabel
         );
+        ga('main.ec:addProduct',{
+          'id': digitalData.page.product.id.substring(0,8),
+          'name': digitalData.page.product.name,
+          'category': digitalData.page.product.masterCategory,
+          'variant': digitalData.page.product.id.substring(0,8).slice(-2) // Last two digits of SKU = colour ID
+        });
       }
     }, 100);
   });
