@@ -1,4 +1,15 @@
 $(function(){
+  // Click on Just Arrived in nav
+  $('body').on('click', 'li#just_arrived_top_nav', function(){
+    ga(
+      'main.send',
+      'event',
+      'Bag',
+      'Click',
+      'Just arrived'
+    );
+  });
+
   // Move to wishlist button click
   $('.add-to-wishlist' ).click(function(e){
     var eventLabel = $(this).parents('.cart-row').find('.hidden-product-id').attr('value').substring(0,8);
