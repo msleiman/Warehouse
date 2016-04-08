@@ -75,12 +75,12 @@ $(function(){
     );
   });
 
-	// When the user reaches the end of the search results
+	// When the user reaches the end of the PLP
 	$(window).load(function(){ // Use window load as otherwise the GA event fires prematurely.
-		if (window.location.href.indexOf('search?') >= 0) {
+		if (window.location.href.indexOf('search?') >= 0) { // If the user is on a search results page, fire a different GA event.
 			var refreshInterval = setInterval(function() { // Start a timer that checks to see if the user is at the end of the page (minus footer and Recently Viewed sections)
 				if ((window.innerHeight + window.scrollY) >= (document.body.offsetHeight - $('footer').height() - $('#recently-viewed-baynote').height() )) {
-					clearInterval(refreshInterval);
+					clearInterval(refreshInterval); // Cancel the timer.
 					ga(
 						'main.send',
 						'event',
@@ -91,7 +91,21 @@ $(function(){
 				}
 			}, 200);
 		}
-	});
 
+		else { // If the user is on a normal PLP section (aka category) page - i.e. NOT a search page, fire a different GA event.
+			var refreshInterval = setInterval(function() { // Start a timer that checks to see if the user is at the end of the page (minus footer and Recently Viewed sections)
+				if ((window.innerHeight + window.scrollY) >= (document.body.offsetHeight - $('footer').height() - $('#recently-viewed-baynote').height() )) {
+					clearInterval(refreshInterval); // Cancel the timer.
+					ga(
+						'main.send',
+						'event',
+						'Dynamic load',
+						'Section',
+						window.location.href
+					);
+				}
+			}, 200);
+		}
+	});
 
 });
