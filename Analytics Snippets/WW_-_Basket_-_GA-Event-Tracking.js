@@ -1,7 +1,13 @@
 $(function(){
   // Move to wishlist button click
-  $('.add-to-wishlist' ).click(function(){
-    var eventLabel = $(this).parents('.cart-row').find('.hidden-product-id').attr('value');
+  $('.add-to-wishlist' ).click(function(e){
+    var eventLabel = $(this).parents('.cart-row').find('.hidden-product-id').attr('value').substring(0,8);
+    ga('main.ec:addProduct',{
+      'id': eventLabel,
+      'name': $(this).parents('tbody').find('.item-title a').html(),
+      'category': $(this).parents('tbody').find('.item-title a').attr('href').split('/')[3],
+      'variant': eventLabel.slice(-2) // Last two digits of SKU = colour ID
+    });
     ga(
       'main.send',
       'event',
