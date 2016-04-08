@@ -8,7 +8,7 @@ $(function(){
 		 to a url like /gb/account?registration=true). This is because they may encounter server-side validation errors
 	   before registration is confirmed, and so a normal submit action is not good enough.
 	*/
-	if (window.location.href.indexOf('registration=true') > 0) {
+	if (window.location.href.indexOf('registration=true') >= 0) {
 		ga('main.send', 'event', 'Create account', 'Submit - Create account');
 	};
 
@@ -42,4 +42,32 @@ $(function(){
       eventlabel
     );
   });
+
+	// Report the stage the user is at when they proceed through Checkout
+	// Step 1: Delivery
+	if ($('.checkout-progress-indicator .active span span').text() == 'Delivery') {
+		$('body').on('click', '#address-form .button_primary', function(){
+			ga(
+				'main.send',
+				'event',
+				'Checkout',
+				'Submit',
+				'Delivery'
+			);
+		});
+	}
+
+	// Step 2: Your Details
+	if ($('.checkout-progress-indicator .active span span').text() == 'Your Details') {
+		$('body').on('click', '.button_primary[type=submit]', function(){
+			ga(
+				'main.send',
+				'event',
+				'Checkout',
+				'Submit',
+				'Your Details'
+			);
+		});
+	}
+
 });
