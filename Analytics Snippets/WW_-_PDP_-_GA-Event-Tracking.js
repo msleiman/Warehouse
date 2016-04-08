@@ -84,7 +84,9 @@ $(function(){
     var eventLabel = $('.updatingPdpMainsku').text().trim();
     // Get first 3 digits of postcode entered.
     var postCode = $('#dwfrm_storelocator_postalCode').val().substring(0,3).toUpperCase();
-    ga( 'main.set', { 'dimension13': postCode } );
+    if (postCode.match(/\d+/g) != null) { // If the postcode contains a number (e.g. is not a town name) then send the postcode.
+      ga( 'main.set', { 'dimension13': postCode } );
+    }
     ga(
       'main.send',
       'event',
@@ -98,7 +100,9 @@ $(function(){
     var eventLabel = $('.updatingPdpMainsku').text().trim();
     // Get first 3 digits of postcode entered.
     var postCode = $('#dwfrm_storelocator_postalCode').val().substring(0,3).toUpperCase();
-    ga( 'main.set', { 'dimension13': postCode } );
+    if (postCode.match(/\d+/g) != null) { // If the postcode contains a number (e.g. is not a town name) then send the postcode.
+      ga( 'main.set', { 'dimension13': postCode } );
+    }
     ga(
       'main.send',
       'event',
