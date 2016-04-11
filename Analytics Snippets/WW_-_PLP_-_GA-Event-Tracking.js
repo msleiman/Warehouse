@@ -1,5 +1,19 @@
 $(function(){
 
+	// Report a VPV to GA when more products are loaded onto the screen from infinite scroll.
+	$(window).load(function(){
+		// Collect an initial number of products displayed on the page.
+		var numberOfProductsShown = $('li.grid-tile').length;
+		$(window).scroll(function(){
+			if ($('li.grid-tile').length > numberOfProductsShown) {
+				numberOfProductsShown = $('li.grid-tile').length;
+				var currentPageNumber = window.location.search.split('=').pop(); // Get current page number.
+				ga('main.send', 'pageview', document.location.pathname + 'vpv/length/' + currentPageNumber);
+		    ga('rollUp.send', 'pageview', document.location.pathname + 'vpv/length/' + currentPageNumber);
+			}
+		});
+	});
+
 	// When something on the search results page (search page or category page - the latter is a search too) is clicked
 	$( '.search-result-content' ).on( 'click', '.quickviewbutton, .thumb-link, .product-action, .name-link, .save_for_later', function(){
 		if ( $( '.sort-by_container > #imagesize' ).val() == 0 ) {
