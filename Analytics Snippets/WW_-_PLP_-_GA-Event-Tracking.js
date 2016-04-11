@@ -15,59 +15,59 @@ $(function(){
 	});
 
 	// When something on the search results page (search page or category page - the latter is a search too) is clicked
-	$( '.search-result-content' ).on( 'click', '.quickviewbutton, .thumb-link, .product-action, .name-link, .save_for_later', function(){
-		if ( $( '.sort-by_container > #imagesize' ).val() == 0 ) {
-			ga( 'main.set', { 'dimension3': 'large' } );
-		}
-		else {
-			ga( 'main.set', { 'dimension3': 'small' } );
-		}
-		if ( $( '.sort-by_container > #imageview' ).val() == 0 ) {
-			ga( 'main.set', { 'dimension4': 'product' } );
-		}
-		else {
-			ga( 'main.set', { 'dimension4': 'model' } );
-		}
-		if ( $( '.sort-by_container > #hideinfo' ).val() == 0 )	{
-			ga( 'main.set', { 'dimension5': 'show' } );
-		}
-		else {
-			ga( 'main.set', { 'dimension5': 'hide' } );
-		}
-
-		ga( 'main.set', { 'dimension6': $( 'form[name="Product-Sorting-Options"] select option:selected' ).text().trim().toLowerCase().replace(/\s/g, '-') } );
-		var productImageURL = $( this ).parents( '.product-tile-grid' ).find( '.flex-active-slide .thumb-link > img' ).attr( 'src' );
-		var eightDigitSKU = productImageURL.split('/').pop().split('_')[1];
-		var productName = $( this ).parents( '.product-tile-grid' ).find( '.name-link' ).text().trim().toLowerCase().replace(/\s/g, '-');
-
-		// If the user has clicked to add the item to cart (i.e. Quick Buy)
-		if ( $( this ).hasClass( 'quickviewbutton' ) ) {
-			ga('main.ec:addProduct',{
-				'id': 		eightDigitSKU,
-				'name': 	productName,
-				'category': digitalData.page.category.id
-			});
-			ga('main.send', 'event', 'Quick buy', 'Click', eightDigitSKU );
-		}
-
-		// If the user has clicked to add the item to their wishlist (aka 'Save Item')
-		else if ( $( this ).hasClass( 'wl-action' ) || $( this ).hasClass( 'save_for_later' ) )	{
-			ga('main.send', 'event', 'Save item', 'Click', eightDigitSKU );
-		}
-
-		// If the user has clicked the image to view the PDP
-		else {
-			if (window.location.href.indexOf('search') > 0) { // If user is on the search page and not on category/section page
-				ga('main.send', 'event', 'Picture', 'Search Results', eightDigitSKU );
+	$(window).load(function(){
+		$( '.search-result-content' ).on( 'click', '.quickviewbutton, .thumb-link img, .product-action, .name-link, .save_for_later', function(){
+			if ( $( '.sort-by_container > #imagesize' ).val() == 0 ) {
+				ga( 'main.set', { 'dimension3': 'large' } );
 			}
-			else { // If the user is on a category/section page
-				ga('main.send', 'event', 'Picture', 'Section', eightDigitSKU );
+			else {
+				ga( 'main.set', { 'dimension3': 'small' } );
+			}
+			if ( $( '.sort-by_container > #imageview' ).val() == 0 ) {
+				ga( 'main.set', { 'dimension4': 'product' } );
+			}
+			else {
+				ga( 'main.set', { 'dimension4': 'model' } );
+			}
+			if ( $( '.sort-by_container > #hideinfo' ).val() == 0 )	{
+				ga( 'main.set', { 'dimension5': 'show' } );
+			}
+			else {
+				ga( 'main.set', { 'dimension5': 'hide' } );
 			}
 
-		}
+			ga( 'main.set', { 'dimension6': $( 'form[name="Product-Sorting-Options"] select option:selected' ).text().trim().toLowerCase().replace(/\s/g, '-') } );
+			var productImageURL = $( this ).parents( '.product-tile-grid' ).find( '.flex-active-slide .thumb-link > img' ).attr( 'src' );
+			var eightDigitSKU = productImageURL.split('/').pop().split('_')[1];
+			var productName = $( this ).parents( '.product-tile-grid' ).find( '.name-link' ).text().trim().toLowerCase().replace(/\s/g, '-');
+
+			// If the user has clicked to add the item to cart (i.e. Quick Buy)
+			if ( $( this ).hasClass( 'quickviewbutton' ) ) {
+				ga('main.ec:addProduct',{
+					'id': 		eightDigitSKU,
+					'name': 	productName,
+					'category': digitalData.page.category.id
+				});
+				ga('main.send', 'event', 'Quick buy', 'Click', eightDigitSKU );
+			}
+
+			// If the user has clicked to add the item to their wishlist (aka 'Save Item')
+			else if ( $( this ).hasClass( 'wl-action' ) || $( this ).hasClass( 'save_for_later' ) )	{
+				ga('main.send', 'event', 'Save item', 'Click', eightDigitSKU );
+			}
+
+			else { // If the user has clicked the image to view the PDP
+				if (window.location.href.indexOf('search') > 0) { // If user is on the search page and not on category/section page
+					ga('main.send', 'event', 'Picture', 'Search Results', eightDigitSKU );
+				}
+				else { // If the user is on a category/section page
+					ga('main.send', 'event', 'Picture', 'Section', eightDigitSKU );
+				}
+			}
+		});
 	});
 
-    // Filters
+  // Filters
   $('#main').on('click', '.filters_wrapper li a', function(e) {
     var eventAction = '';
     if ($(e.currentTarget).parent().hasClass('selected')) {
@@ -91,35 +91,38 @@ $(function(){
 
 	// When the user reaches the end of the PLP
 	$(window).load(function(){ // Use window load as otherwise the GA event fires prematurely.
-		if (window.location.href.indexOf('search?') >= 0) { // If the user is on a search results page, fire a different GA event.
-			var refreshInterval = setInterval(function() { // Start a timer that checks to see if the user is at the end of the page (minus footer and Recently Viewed sections)
-				if ((window.innerHeight + window.scrollY) >= (document.body.offsetHeight - $('footer').height() - $('#recently-viewed-baynote').height() )) {
-					clearInterval(refreshInterval); // Cancel the timer.
-					ga(
-						'main.send',
-						'event',
-						'Dynamic load',
-						'Search Results',
-						window.location.href
-					);
-				}
-			}, 200);
-		}
+		setTimeout(function(){
+			if (window.location.href.indexOf('search?') >= 0) { // If the user is on a search results page, fire a different GA event.
+				var refreshInterval = setInterval(function() { // Start a timer that checks to see if the user is at the end of the page (minus footer and Recently Viewed sections)
+					if ((window.innerHeight + window.scrollY) >= (document.body.offsetHeight - $('footer').height() - $('#recently-viewed-baynote').height() )) {
+						clearInterval(refreshInterval); // Cancel the timer.
+						ga(
+							'main.send',
+							'event',
+							'Dynamic load',
+							'Search Results',
+							window.location.href
+						);
+					}
+				}, 200);
+			}
 
-		else { // If the user is on a normal PLP section (aka category) page - i.e. NOT a search page, fire a different GA event.
-			var refreshInterval = setInterval(function() { // Start a timer that checks to see if the user is at the end of the page (minus footer and Recently Viewed sections)
-				if ((window.innerHeight + window.scrollY) >= (document.body.offsetHeight - $('footer').height() - $('#recently-viewed-baynote').height() )) {
-					clearInterval(refreshInterval); // Cancel the timer.
-					ga(
-						'main.send',
-						'event',
-						'Dynamic load',
-						'Section',
-						window.location.href
-					);
-				}
-			}, 200);
-		}
+			else { // If the user is on a normal PLP section (aka category) page - i.e. NOT a search page, fire a different GA event.
+				var refreshInterval = setInterval(function() { // Start a timer that checks to see if the user is at the end of the page (minus footer and Recently Viewed sections)
+					if ((window.innerHeight + window.scrollY) >= (document.body.offsetHeight - $('footer').height() - $('#recently-viewed-baynote').height() )) {
+						clearInterval(refreshInterval); // Cancel the timer.
+						ga(
+							'main.send',
+							'event',
+							'Dynamic load',
+							'Section',
+							window.location.href
+						);
+					}
+				}, 200);
+			}
+		}, 2000);
+
 	});
 
 });
