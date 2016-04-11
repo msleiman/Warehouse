@@ -67,6 +67,9 @@ $(function(){
 				'Submit',
 				'Your Details'
 			);
+			// Send virtual pageviews of the payment page.
+			ga('main.send', 'pageview', '/' + digitalData.site.country.toLowerCase() + '/vpv/payment');
+			ga('rollUp.send', 'pageview', '/' + digitalData.site.country.toLowerCase() + '/vpv/payment');
 		});
 	}
 
