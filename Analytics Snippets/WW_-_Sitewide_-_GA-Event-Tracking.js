@@ -126,18 +126,18 @@ $(function(){
   }));
 
   $('#recently-viewed-baynote').on('click', 'a', function(e) {
-    var eventLabel = $(this).parents('.product-tile').attr('data-itemid');
+    var eventLabel = $(this).parents('.product-tile').attr('data-itemid').substring(0,8);
     ga(
       'main.send',
       'event',
-      'Recently view',
+      'Recently viewed',
       'Click',
       eventLabel
     );
   });
 
   $('#recommended_products').on('click', 'a', function(e) {
-    var eventLabel = $(this).parents('.product-tile').attr('data-itemid');
+    var eventLabel = $(this).parents('.product-tile').attr('data-itemid').substring(0,8);
     ga(
       'main.send',
       'event',
@@ -148,7 +148,7 @@ $(function(){
   });
 
   $('#similar_products').on('click', 'a', function(e) {
-    var eventLabel = $(this).parents('.product-tile').attr('data-itemid');
+    var eventLabel = $(this).parents('.product-tile').attr('data-itemid').substring(0,8);
     ga(
       'main.send',
       'event',
