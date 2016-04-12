@@ -46,8 +46,11 @@ $(function(){
 
   $('.header-search form').submit(function(){
     var searchTerm = $('input#q').val();
+    var numberOfAutoSuggestedSearchResults = $('.search-suggestion-right-panel-product, .search-suggestion-right-panel-product-last').length.toString();
     for (var i = 0; i < searchRulesKeys.length; i++ ) {
       if (searchTerm == searchRulesKeys[i] ) { // If the search term equals a key in the redirect rules, send a GA virtual pageview.
+        ga('main.set', { 'dimension9': numberOfAutoSuggestedSearchResults } );
+        ga('rollUp.set', { 'dimension9': numberOfAutoSuggestedSearchResults } );
         ga('main.send', 'pageview', '/' + digitalData.site.country.toLowerCase() + searchRules[searchRulesKeys[i]] + '/vpv/search/' + searchTerm);
         ga('rollUp.send', 'pageview', '/' + digitalData.site.country.toLowerCase() + searchRules[searchRulesKeys[i]] + '/vpv/search/' + searchTerm);
       }
@@ -58,10 +61,12 @@ $(function(){
   $('body').on('click', '.search-suggestion-right-panel-product', function(){
     var searchTerm = $('input#q').val();
     var numberOfAutoSuggestedSearchResults = $('.search-suggestion-right-panel-product, .search-suggestion-right-panel-product-last').length.toString();
+    var vpvURL = document.location.pathname + 'vpv/search/' + searchTerm;
 
     ga('main.set', { 'dimension9': numberOfAutoSuggestedSearchResults } );
-    ga('main.send', 'pageview', document.location.pathname + '/vpv/search/' + searchTerm);
-    ga('rollUp.send', 'pageview', document.location.pathname + '/vpv/search/' + searchTerm);
+    ga('rollUp.set', { 'dimension9': numberOfAutoSuggestedSearchResults } );
+    ga('main.send', 'pageview', vpvURL);
+    ga('rollUp.send', 'pageview', vpvURL);
   });
 
   $( '.header_navigation' ).on( 'click', 'li.subsubitems > ul > li > a', function(){
