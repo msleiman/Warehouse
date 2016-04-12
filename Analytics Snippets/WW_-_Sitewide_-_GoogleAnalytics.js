@@ -87,6 +87,11 @@ window.optimizely = window.optimizely || [];
 window.optimizely.push("activateUniversalAnalytics");
 
 if (digitalData.page.instanceID.indexOf('_OrderConfirmation_') > -1) {
+
+  // Set delivery option as custom dimension
+  ga( 'main.set', { 'dimension7': digitalData.delivery.id } );
+  ga( 'rollUp.set', { 'dimension7': digitalData.delivery.id } );
+
   var p = digitalData.bag.products;
   for (var i in p) {
     ga('main.ec:addProduct', {
