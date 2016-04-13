@@ -7,7 +7,7 @@ $(function(){
 		$(window).scroll(function(){
 			if ($('li.grid-tile').length > numberOfProductsShown) {
 				numberOfProductsShown = $('li.grid-tile').length;
-				var currentPageNumber = window.location.search.split('=').pop(); // Get current page number.
+				var currentPageNumber = window.location.search.split('=').pop() || '1'; // Get current page number. If no page number set in URL, set it to 1.
 				ga('main.send', 'pageview', document.location.pathname + 'vpv/length/' + currentPageNumber);
 		    ga('rollUp.send', 'pageview', document.location.pathname + 'vpv/length/' + currentPageNumber);
 			}
