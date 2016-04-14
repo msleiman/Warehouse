@@ -1,5 +1,5 @@
-// The below code sets a cookie if the user has come from a Linkshare referral link. Linkshare appends a ?siteID= parameter
-// to our URLs which we need to detect and set a cookie that contains the site ID.
+// The below code sets a cookie if the user has come from a Linkshare referral link. Linkshare appends a &utm_term= parameter
+// to our URLs which we need to detect and set a cookie that contains the referrer ID.
 // e.g. A referral link might look like http://www.warehouse.co.uk/gb?siteID=1KW2Xiq9xN0-4.c_9w1X8XpO94TU14hg3D
 
 (function(){
@@ -8,13 +8,18 @@
   for (var i = 0; i < urlParametersArray.length; i++) {
     if (urlParametersArray[i].indexOf('utm_term') >= 0) {
       var linkshareReferrerID = urlParametersArray[i].split('=').pop();
-      console.log(linkshareReferrerID);
+      console.log('Linkshare referral detected. Referrer ID is ' + linkshareReferrerID);
 
       var currentDate = new Date();
       var currentDatePlus30Days = currentDate.setDate(currentDate.getDate() + 30);
 
+      // Set the linkshareReferrerID cookie and let it expire in 30 days from now.
       document.cookie = 'linkshareReferrerID=' + linkshareReferrerID + '; expires=' + new Date(currentDatePlus30Days).toUTCString();
-      document.cookie = 'linkshareReferralLastArrivalTime=' + Math.round(new Date().getTime()/1000); + ';'; // The Unix timestamp for when the user first arrived via the referral link.
+      // The Unix timestamp for when the user first arrived via the referral link.
+      document.cookie = 'linkshareReferralLastArrivalTime=' + Math.round(new Date().getTime()/1000).toString() + '; expires=' + new Date(currentDatePlus30Days).toUTCString();
+    }
+    else {
+      console.log('No utm_term parameter detected.');
     }
   }
 
