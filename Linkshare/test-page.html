@@ -1,0 +1,174 @@
+<!doctype html>
+<html>
+  <head>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
+    <script src="WW_-_Confirmation_-_LinkShare.js"></script>
+    <style>
+      .container > div {
+        margin: 15px 0px;
+        padding-bottom: 50px;
+        border-bottom: 1px solid #eee;
+      }
+
+      .col-md-6 {
+        margin-top: 20px;
+      }
+    </style>
+  </head>
+  <body>
+
+    <div class="container">
+      <h1>Linkshare tracking pixel test script</h1>
+      <p>
+        This page will help you test the Linkshare tracking pixel. Enter the variables below that you wish to test, and open your web browser's console
+        to view the results.
+      </p>
+
+      <p>
+        To recap, the de-dupe rules are:
+      </p>
+
+      <ul class="list-group">
+        <li>
+          If the referral partner is part of a list of partners that provide vouchers, check that the user has applied any coupons from that referral partner. If not, do not track.
+        </li>
+        <li>
+           If the referral partner doesn't provide vouchers, don't check for coupons, this rule doesn't apply.
+        </li>
+        <li>
+           If the user purchased 30 minutes before landing on the site from the referrer, don't track.
+        </li>
+        <li>
+           If the user came to the site less than 24 hours before from one of our own emails, do not track.
+        </li>
+      </ul>
+
+      <div class="row">
+        <button class="btn btn-danger" id="delete-all-cookies">Delete all cookies and start again</button>
+      </div>
+
+      <div class="row alert alert-info">
+        <div class="col-md-6">
+          <label>Referrer ID (one that does not supply promocodes is lMh2Xiq9xN0; one that supplies promocodes is SNgfG0hYjYc):</label><input class="form-control" id="referrer-id-value" />
+          <br />
+          <button class="btn btn-primary" id="referrer-id-submit">Create referrer ID cookie</button>
+        </div>
+
+        <div class="col-md-6">
+          <label>Optional promocode (sample promocode is LSTEST20):</label><input class="form-control" id="promocode-value" />
+          <br />
+          <button class="btn btn-primary" id="promocode-submit">Add promocode</button>
+        </div>
+
+        <div class="col-md-6" style="clear:both">
+          <label>User last purchased an item (minutes ago from the current time):</label><input class="form-control" id="user-last-purchased-value" />
+          <br />
+          <button class="btn btn-primary" id="user-last-purchased-submit">Submit</button>
+        </div>
+
+        <div class="col-md-6">
+          <label>User last visited from an email campaign (hours ago from the current time):</label><input class="form-control" id="user-last-visited-from-email-campaign-value" />
+          <br />
+          <button class="btn btn-primary" id="user-last-visited-from-email-campaign-submit">Submit</button>
+        </div>
+
+      </div>
+
+      <div class="row">
+        <button id="run-linkshare-script" class="btn btn-success btn-lg">Run pixel script</button>
+      </div>
+    </div>
+
+    <script>
+      var digitalData = {
+        "page": {
+          "type": "OrderConfirmation"
+        },
+        "site": {
+          "currency": "GBP"
+        },
+        "bag": {
+          "promocodes": "",
+          "products": [
+            {
+            "id": "0256097010",
+            "price": "39.00",
+            "quantity": "1",
+            "discount": "0.00",
+            "name": "JACQUARD SLIM LEG TROUSER",
+            "colour": "LGRY",
+            "masterCategory": "TROUSERS AND SHORTS"
+            },
+            {
+              "id": "SAMPLESKU",
+              "price": "31.00",
+              "quantity": "1",
+              "discount": "0.00",
+              "name": "SAMPLE PRODUCT",
+              "colour": "LGRY",
+              "masterCategory": "TROUSERS AND SHORTS"
+            }
+          ]
+        }
+      }
+
+      function deleteAllCookies() {
+        var cookies = document.cookie.split(";");
+
+        for (var i = 0; i < cookies.length; i++) {
+          var cookie = cookies[i];
+          var eqPos = cookie.indexOf("=");
+          var name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;
+          document.cookie = name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT";
+        }
+        console.log('All cookies deleted.');
+      }
+
+      $(document).ready(function(){
+
+        $('#delete-all-cookies').click(function(){
+          deleteAllCookies();
+        });
+
+        $('#referrer-id-submit').click(function(){
+          var cookieValue = $('#referrer-id-value').val();
+          document.cookie = 'linkshareReferrerID=' + cookieValue + ';';
+          console.log('Created cookie with value ' + cookieValue);
+        });
+
+        $('#promocode-submit').click(function(){
+          if ( $('#promocode-value').val().length > 0 ) {
+            var promocode = $('#promocode-value').val();
+            console.log('Promocode ' + promocode + ' added.');
+            digitalData.bag.promocodes = promocode;
+          }
+        });
+
+        $('#user-last-purchased-submit').click(function(){
+          if ( $('#user-last-purchased-value').val().length > 0 ) {
+            var userLastPurchasedSecondsAgo = parseInt($('#user-last-purchased-value').val()) * 60;
+            var userLastPurchasedTimestamp = Math.floor(Date.now()/1000) - userLastPurchasedSecondsAgo;
+            document.cookie = 'userLastPurchased=' + userLastPurchasedTimestamp;
+            console.log('Set userLastPurchased=' + userLastPurchasedTimestamp);
+          }
+        });
+
+        $('#user-last-visited-from-email-campaign-submit').click(function(){
+          if ( $('#user-last-visited-from-email-campaign-value').val().length > 0 ) {
+            var userLastVisitedFromEmailCampaignHoursAgo = $('#user-last-visited-from-email-campaign-value').val();
+            var userLastVisitedFromEmailCampaignSecondsAgo = parseInt($('#user-last-visited-from-email-campaign-value').val()) * 60 * 60;
+            var userLastPurchasedTimestamp = Math.floor(Date.now()/1000) - userLastVisitedFromEmailCampaignSecondsAgo;
+            document.cookie = '__utmz=1.' + userLastPurchasedTimestamp + '.2.2.utmcsr=email|utmccn=WH_2016wk06_GAMECHANGERS_TIMETEST_10AM_03042016|utmcmd=email|utmcct=1015042142';
+            console.log('User last visited the site from an email campaign ' + userLastVisitedFromEmailCampaignHoursAgo + ' hours ago - set __utmz cookie to ' + userLastPurchasedTimestamp);
+          }
+        });
+
+        $('#run-linkshare-script').click(function(){
+          fireLinksharePixel();
+        });
+
+      });
+    </script>
+  </body>
+</html>
