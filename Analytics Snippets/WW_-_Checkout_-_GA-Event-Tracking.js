@@ -19,13 +19,14 @@ $(function(){
 		}
 	});
 
-  // Checkout form
-  $('input,select','#primary, #secondary').blur(function() {
+  // Checkout form - don't add blur function to student code input field as we have a separate event for that below
+  $('input,select','#primary, #secondary').not('input.voucher-code2, .apply-voucher2').blur(function() {
     var eventAction = $(this).parents('form').attr('id');
     var eventlabel = $('label[for="' + $(this).attr('name') + '"]');
     if (eventlabel.length != 0) {
       eventlabel = eventlabel.text();
-    }else {
+    }
+		else {
       eventlabel = $(this).attr('placeholder');
     }
     if ((typeof eventlabel === 'undefined') || eventlabel === false) {
@@ -34,6 +35,7 @@ $(function(){
     if ((typeof eventlabel != 'undefined') && eventlabel != false) {
       eventlabel = eventlabel.trim().replace(/^\s+|\s+$/g, '').replace(/(\r\n|\n|\r)/gm,'-');
     }
+
     ga(
       'main.send',
       'event',
@@ -42,6 +44,19 @@ $(function(){
       eventlabel
     );
   });
+
+	// Send an event to GA when a student code is submitted on checkout.
+	$('body').on('click', '.apply-voucher2', function(){
+		var studentCodeSubmitted = $('input.voucher-code2').val();
+		if (studentCodeSubmitted.length > 0) {
+			ga(
+				'main.send',
+				'event',
+				'Checkout',
+				'Student discount'
+			);
+		}
+	});
 
 	// Report the stage the user is at when they proceed through Checkout
 	// Step 1: Delivery
