@@ -14,7 +14,7 @@
       var currentDatePlus30Days = currentDate.setDate(currentDate.getDate() + 30);
 
       // Set the linkshareReferrerID cookie and let it expire in 30 days from now.
-      document.cookie = 'linkshareReferrerID=' + linkshareReferrerID + '; expires=' + new Date(currentDatePlus30Days).toUTCString();
+      document.cookie = 'linkshareReferrerID=' + linkshareReferrerID + '; expires=' + new Date(currentDatePlus30Days).toUTCString() + '; path=/';
       // The Unix timestamp for when the user first arrived via the referral link.
       document.cookie = 'linkshareReferralLastArrivalTime=' + Math.round(new Date().getTime()/1000).toString() + '; expires=' + new Date(currentDatePlus30Days).toUTCString();
     }
