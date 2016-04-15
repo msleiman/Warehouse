@@ -72,6 +72,9 @@ ga('rollUp.linker:autoLink', ['warehouse-london.com', 'andotherbrands.com']);
 if (typeof(digitalData) != 'undefined' && typeof(digitalData.customer) != 'undefined' && typeof(digitalData.customer.id) != 'undefined') {
   ga('main.set', 'userId', digitalData.customer.id);
   ga('rollUp.set', 'userId', digitalData.customer.id);
+
+  ga( 'main.set', { 'dimension11': digitalData.customer.id } );
+  ga( 'rollUp.set', { 'dimension11': digitalData.customer.id } );
 }
 
 if (row) {
