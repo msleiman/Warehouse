@@ -1,5 +1,13 @@
 $(function(){
 
+	// Send virtual pageviews if the customer is not logged in when checking out and they are redirected to the login/register page.
+	if (digitalData.page.title.indexOf('Log in' || 'Register') >= 0) {
+		ga('ec:setAction','checkout', {'step': 2});
+
+		ga('main.send', 'pageview', '/checkout/vpv/login');
+    ga('rollUp.send', 'pageview', '/checkout/vpv/login');
+	}
+
 	$( '#RegistrationForm' ).on( 'blur', 'input, select, checkbox', function(){
 		ga('main.send', 'event', 'create-account', 'field_lost-focus', $( this ).attr( 'name' ) );
 	});
@@ -61,6 +69,29 @@ $(function(){
 	// Report the stage the user is at when they proceed through Checkout
 	// Step 1: Delivery
 	if ($('.checkout-progress-indicator .active span span').text() == 'Delivery') {
+
+		ga('ec:setAction','checkout', {'step': 3});
+
+		var checkoutURLParameters = digitalData.page.url.split('?').pop();
+		// Check for parameters in the page URL to see if the user has logged in during checkout, is using Guest Checkout, or was logged in before checkout.
+		// Drop session cookies so we can inspect the checkout method on the Order Confirmation page.
+
+		if ( checkoutURLParameters.indexOf('analyticsLoginType=checkout%20login') >= 0 ) { // If user has logged in during checkout
+			// Don't send a VPV.
+			document.cookie = 'userCheckoutType=userLoggedInDuringCheckout;path=/';
+		}
+
+		else if ( checkoutURLParameters.indexOf('analyticsLoginType=guest%20checkout') >= 0 ) { // If the user is using Guest Checkout
+			document.cookie = 'userCheckoutType=userUsingGuestCheckout;path=/';
+		}
+
+		else { // If the user was already logged in before checkout, send a VPV.
+			document.cookie = 'userCheckoutType=userLoggedInBeforeCheckout;path=/';
+
+			ga('main.send', 'pageview', '/checkout/vpv/registered');
+	    ga('rollUp.send', 'pageview', '/checkout/vpv/registered');
+		}
+
 		$('body').on('click', '#address-form .button_primary', function(){
 			ga(
 				'main.send',
@@ -72,8 +103,11 @@ $(function(){
 		});
 	}
 
-	// Step 2: Your Details
+	// Step 2: Your Details (also known as the Billing page)
 	if ($('.checkout-progress-indicator .active span span').text() == 'Your Details') {
+
+		ga('ec:setAction','checkout', {'step': 4});
+
 		$('body').on('click', '.button_primary[type=submit]', function(){
 			ga(
 				'main.send',
@@ -82,6 +116,9 @@ $(function(){
 				'Submit',
 				'Your Details'
 			);
+
+			ga('ec:setAction','checkout', {'step': 5});
+
 			// Send virtual pageviews of the payment page.
 			ga('main.send', 'pageview', '/' + digitalData.site.country.toLowerCase() + '/vpv/payment');
 			ga('rollUp.send', 'pageview', '/' + digitalData.site.country.toLowerCase() + '/vpv/payment');
