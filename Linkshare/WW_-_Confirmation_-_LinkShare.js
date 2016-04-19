@@ -149,10 +149,10 @@ function fireLinksharePixel() {
           // Generate a pipe-delimited ('|') list of amounts for each item, in the same order as the skulist and qlist above
           for (var i = 0; i < Object.keys(digitalData.bag.products).length; i++) {
             if (i != Object.keys(digitalData.bag.products).length - 1) { // If i is not the last element in the array, then add a pipe ('|')
-              linkshareTrackingPixel += (Math.floor(digitalData.bag.products[i].price * 0.8 * 100)) + '|'; // Multiply by 0.8 to remove VAT
+              linkshareTrackingPixel += (Math.floor(digitalData.bag.products[i].price * 0.833333 * 100)) + '|'; // Multiply by 0.833333 to remove VAT
             }
             else {
-              linkshareTrackingPixel += Math.floor(digitalData.bag.products[i].price * 0.8 * 100);
+              linkshareTrackingPixel += Math.floor(digitalData.bag.products[i].price * 0.833333 * 100);
             }
           }
 
