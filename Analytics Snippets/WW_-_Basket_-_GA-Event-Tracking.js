@@ -1,4 +1,17 @@
 $(function(){
+
+  ga('ec:setAction','checkout', {'step': 1});
+
+  // Send virtual pageviews depending on if the customer is already logged in or not
+  if (digitalData.customer.id.length > 0) {
+    ga('main.send', 'pageview', '/cart/vpv/registered');
+    ga('rollUp.send', 'pageview', '/cart/vpv/registered');
+  }
+  else {
+    ga('main.send', 'pageview', '/cart/vpv/guest');
+    ga('rollUp.send', 'pageview', '/cart/vpv/guest');
+  }
+
   // Click on Just Arrived in nav
   $('body').on('click', 'li#just_arrived_top_nav', function(){
     ga(
