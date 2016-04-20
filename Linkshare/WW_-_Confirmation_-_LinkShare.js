@@ -6,6 +6,17 @@ function fireLinksharePixel() {
     console.log('Linkshare referrer cookie detected.');
     if ( digitalData.page.type == 'OrderConfirmation') {
 
+      // Check if the user received a discount on their bag by using a promocode. If they did, record the amount as an integer.
+      // Note: this is different to receiving a discount on a product because it is on sale.
+      if (parseFloat(digitalData.bag.totals.discount) < 0) {
+        var userReceivedAPromocodeDiscount = true;
+        var userPromocodeDiscountAmount = parseFloat(digitalData.bag.totals.discount);
+        console.log('The user used a promo code to receive a discount on their order. We will send this to Linkshare if the pixel fires.');
+      }
+      else {
+        var userReceivedAPromocodeDiscount = false;
+      }
+
       // Split the website's cookies into an array that we can access later.
       // Capture the Linkshare referrer's ID from a cookie that's set by the WW_-_Sitewide_-_LinkShare code snippet in CoreMetrics.
       var splitCookieArray = document.cookie.split(';')
@@ -132,7 +143,12 @@ function fireLinksharePixel() {
             }
           }
 
-          linkshareTrackingPixel += '&qlist='; // Add in order quantities
+          if (userReceivedAPromocodeDiscount == true) {
+            linkshareTrackingPixel += '|Discount';
+          }
+
+          // Add in order quantities
+          linkshareTrackingPixel += '&qlist=';
 
           // Generate a pipe-delimited ('|') list of quantities, in the same order as the skulist above
           for (var i = 0; i < Object.keys(digitalData.bag.products).length; i++) {
@@ -144,7 +160,12 @@ function fireLinksharePixel() {
             }
           }
 
-          linkshareTrackingPixel += '&amtlist='; // Add in order quantities
+          if (userReceivedAPromocodeDiscount == true) {
+            linkshareTrackingPixel += '|0';
+          }
+
+          // Add in order prices
+          linkshareTrackingPixel += '&amtlist=';
 
           // Generate a pipe-delimited ('|') list of amounts for each item, in the same order as the skulist and qlist above
           for (var i = 0; i < Object.keys(digitalData.bag.products).length; i++) {
@@ -154,6 +175,10 @@ function fireLinksharePixel() {
             else {
               linkshareTrackingPixel += Math.floor(digitalData.bag.products[i].price * 0.833333 * 100);
             }
+          }
+
+          if (userReceivedAPromocodeDiscount == true) {
+            linkshareTrackingPixel += '|-' + Math.floor(userPromocodeDiscountAmount * 0.833333 * 100).toString();
           }
 
           // Add in currency of this order
