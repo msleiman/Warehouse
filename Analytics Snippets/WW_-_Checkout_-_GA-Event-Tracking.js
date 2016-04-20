@@ -2,7 +2,8 @@ $(function(){
 
 	// Send virtual pageviews if the customer is not logged in when checking out and they are redirected to the login/register page.
 	if (digitalData.page.title.indexOf('Log in' || 'Register') >= 0) {
-		ga('ec:setAction','checkout', {'step': 2});
+		ga('main.ec:setAction','checkout', {'step': 2});
+		ga('rollUp.ec:setAction','checkout', {'step': 2});
 
 		ga('main.send', 'pageview', '/checkout/vpv/login');
     ga('rollUp.send', 'pageview', '/checkout/vpv/login');
@@ -70,7 +71,8 @@ $(function(){
 	// Step 1: Delivery
 	if ($('.checkout-progress-indicator .active span span').text() == 'Delivery') {
 
-		ga('ec:setAction','checkout', {'step': 3});
+		ga('main.ec:setAction','checkout', {'step': 3});
+		ga('rollUp.ec:setAction','checkout', {'step': 3});
 
 		var checkoutURLParameters = digitalData.page.url.split('?').pop();
 		// Check for parameters in the page URL to see if the user has logged in during checkout, is using Guest Checkout, or was logged in before checkout.
@@ -106,7 +108,8 @@ $(function(){
 	// Step 2: Your Details (also known as the Billing page)
 	if ($('.checkout-progress-indicator .active span span').text() == 'Your Details') {
 
-		ga('ec:setAction','checkout', {'step': 4});
+		ga('main.ec:setAction','checkout', {'step': 4});
+		ga('rollUp.ec:setAction','checkout', {'step': 4});
 
 		$('body').on('click', '.button_primary[type=submit]', function(){
 			ga(
@@ -117,7 +120,8 @@ $(function(){
 				'Your Details'
 			);
 
-			ga('ec:setAction','checkout', {'step': 5});
+			ga('main.ec:setAction','checkout', {'step': 5});
+			ga('rollUp.ec:setAction','checkout', {'step': 5});
 
 			// Send virtual pageviews of the payment page.
 			ga('main.send', 'pageview', '/' + digitalData.site.country.toLowerCase() + '/vpv/payment');

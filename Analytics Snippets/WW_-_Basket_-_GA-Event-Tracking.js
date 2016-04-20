@@ -1,6 +1,7 @@
 $(function(){
 
-  ga('ec:setAction','checkout', {'step': 1});
+  ga('main.ec:setAction','checkout', {'step': 1});
+  ga('rollUp.ec:setAction','checkout', {'step': 1});
 
   // Send virtual pageviews depending on if the customer is already logged in or not
   if (digitalData.customer.id.length > 0) {
