@@ -50,6 +50,13 @@ $(function(){
     var clickedItemSKU = $('li#' + wishlistItemID).find('.saved_item_image > img').attr('src').split('/').pop().split('_')[1].split('.')[0];
     var daysInWishlist = $('li#' + wishlistItemID).find('.item-expiresin').text().replace(/\D/g,'');
     ga( 'main.set', { 'dimension2': daysInWishlist } );
+    ga('main.ec:addProduct',{
+      'id': clickedItemSKU,
+      'name': wishlistItemName,
+      'category': wishlistItemCategory,
+      'variant': clickedItemSKU.slice(-2) // Last two digits of SKU = colour ID
+    });
+    ga('ec:setAction', 'add');
     ga(
       'main.send',
       'event',
@@ -57,12 +64,6 @@ $(function(){
       'Submit',
       clickedItemSKU
     );
-    ga('main.ec:addProduct',{
-      'id': clickedItemSKU,
-      'name': wishlistItemName,
-      'category': wishlistItemCategory,
-      'variant': clickedItemSKU.slice(-2) // Last two digits of SKU = colour ID
-    });
   }
 
   // Loop through the wishlist items and attach the appropriate click handlers, based on whether the item already has a size chosen or not.
