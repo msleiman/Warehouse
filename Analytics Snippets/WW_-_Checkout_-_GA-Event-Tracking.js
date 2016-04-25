@@ -79,12 +79,14 @@ $(function(){
 		// Drop session cookies so we can inspect the checkout method on the Order Confirmation page.
 
 		if ( checkoutURLParameters.indexOf('analyticsLoginType=checkout%20login') >= 0 ) { // If user has logged in during checkout
-			// Don't send a VPV.
+			// Don't send a VPV. Send a normal pageview.
 			document.cookie = 'userCheckoutType=userLoggedInDuringCheckout;path=/';
+			sendPageviews();
 		}
 
 		else if ( checkoutURLParameters.indexOf('analyticsLoginType=guest%20checkout') >= 0 ) { // If the user is using Guest Checkout
 			document.cookie = 'userCheckoutType=userUsingGuestCheckout;path=/';
+			sendPageviews();
 		}
 
 		else { // If the user was already logged in before checkout, send a VPV.
@@ -110,6 +112,7 @@ $(function(){
 
 		ga('main.ec:setAction','checkout', {'step': 4});
 		ga('rollUp.ec:setAction','checkout', {'step': 4});
+		sendPageviews();
 
 		$('body').on('click', '.button_primary[type=submit]', function(){
 			ga(
@@ -126,6 +129,22 @@ $(function(){
 			// Send virtual pageviews of the payment page.
 			ga('main.send', 'pageview', '/' + digitalData.site.country.toLowerCase() + '/vpv/payment');
 			ga('rollUp.send', 'pageview', '/' + digitalData.site.country.toLowerCase() + '/vpv/payment');
+		});
+	}
+
+	function sendPageviews() {
+		ga('main.send', {
+			hitType: 'pageview',
+			page: digitalData.page.canonical || digitalData.page.url,
+			location: location.href,
+			title: digitalData.page.title
+		});
+
+		ga('rollUp.send', {
+			hitType: 'pageview',
+			page: digitalData.page.canonical || digitalData.page.url,
+			location: location.href,
+			title: digitalData.page.title
 		});
 	}
 
