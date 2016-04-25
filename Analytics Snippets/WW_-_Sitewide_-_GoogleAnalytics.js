@@ -89,60 +89,24 @@ if (row) {
 window.optimizely = window.optimizely || [];
 window.optimizely.push("activateUniversalAnalytics");
 
-if (digitalData.page.instanceID.indexOf('_OrderConfirmation_') > -1) {
+// Send pageviews ONLY IF the page is not a Basket/Cart, Checkout or Order Confirmation page.
 
-  // Set delivery option as custom dimension
-  ga( 'main.set', { 'dimension7': digitalData.delivery.id } );
-  ga( 'rollUp.set', { 'dimension7': digitalData.delivery.id } );
+if ( (digitalData.page.instanceID.indexOf('_Cart') >= 0) || (digitalData.page.instanceID.indexOf('_Checkout') >= 0) || (digitalData.page.instanceID.indexOf('_OrderConfirmation') >= 0) ) {
+  // The page is Basket/Cart, Checkout or Order Confirmation page. We have VPVs for these pages - do not fire regular pageviews.
+}
 
-  var p = digitalData.bag.products;
-  for (var i in p) {
-    ga('main.ec:addProduct', {
-      'id': p[i].id,
-      'name': p[i].name,
-      'category': p[i].masterCategory,
-      'variant': p[i].colour,
-      'price': p[i].price,
-      'quantity': p[i].quantity
-    });
-
-    ga('rollUp.ec:addProduct', {
-      'id': p[i].id,
-      'name': p[i].name,
-      'category': p[i].masterCategory,
-      'variant': p[i].colour,
-      'price': p[i].price,
-      'quantity': p[i].quantity
-    });
-  }
-
-  ga('main.ec:setAction', 'purchase', {
-    'id': digitalData.orderId,
-    'revenue': digitalData.bag.totals.grandTotal,
-    'tax': 0,
-    'shipping': digitalData.delivery.price,
-    'coupon': digitalData.bag.promocodes
+else {
+  ga('main.send', {
+    hitType: 'pageview',
+    page: digitalData.page.canonical || digitalData.page.url,
+    location: location.href,
+    title: digitalData.page.title
   });
 
-  ga('rollUp.ec:setAction', 'purchase', {
-    'id': digitalData.orderId,
-    'revenue': digitalData.bag.totals.grandTotal,
-    'tax': 0,
-    'shipping': digitalData.delivery.price,
-    'coupon': digitalData.bag.promocodes
+  ga('rollUp.send', {
+    hitType: 'pageview',
+    page: digitalData.page.canonical || digitalData.page.url,
+    location: location.href,
+    title: digitalData.page.title
   });
-} // End if on Order Confirmation page.
-
-ga('main.send', {
-  hitType: 'pageview',
-  page: digitalData.page.canonical || digitalData.page.url,
-  location: location.href,
-  title: digitalData.page.title
-});
-
-ga('rollUp.send', {
-  hitType: 'pageview',
-  page: digitalData.page.canonical || digitalData.page.url,
-  location: location.href,
-  title: digitalData.page.title
-});
+}

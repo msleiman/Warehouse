@@ -2,7 +2,49 @@
 
 (function(){
 
-  ga('ec:setAction','checkout', {'step': 6});
+  ga('main.ec:setAction','checkout', {'step': 6});
+  ga('rollUp.ec:setAction','checkout', {'step': 6});
+
+  // Set delivery option as custom dimension
+  ga( 'main.set', { 'dimension7': digitalData.delivery.id } );
+  ga( 'rollUp.set', { 'dimension7': digitalData.delivery.id } );
+
+  var p = digitalData.bag.products;
+  for (var i in p) {
+    ga('main.ec:addProduct', {
+      'id': p[i].id,
+      'name': p[i].name,
+      'category': p[i].masterCategory,
+      'variant': p[i].colour,
+      'price': p[i].price,
+      'quantity': p[i].quantity
+    });
+
+    ga('rollUp.ec:addProduct', {
+      'id': p[i].id,
+      'name': p[i].name,
+      'category': p[i].masterCategory,
+      'variant': p[i].colour,
+      'price': p[i].price,
+      'quantity': p[i].quantity
+    });
+  }
+
+  ga('main.ec:setAction', 'purchase', {
+    'id': digitalData.orderId,
+    'revenue': digitalData.bag.totals.grandTotal,
+    'tax': 0,
+    'shipping': digitalData.delivery.price,
+    'coupon': digitalData.bag.promocodes
+  });
+
+  ga('rollUp.ec:setAction', 'purchase', {
+    'id': digitalData.orderId,
+    'revenue': digitalData.bag.totals.grandTotal,
+    'tax': 0,
+    'shipping': digitalData.delivery.price,
+    'coupon': digitalData.bag.promocodes
+  });
 
   // If the user used guest checkout in this session, we need to fire a VPV to indicate this.
   var splitCookieArray = document.cookie.split(';')
