@@ -56,7 +56,7 @@ $(function(){
       'category': wishlistItemCategory,
       'variant': clickedItemSKU.slice(-2) // Last two digits of SKU = colour ID
     });
-    ga('ec:setAction', 'add');
+    ga('main.ec:setAction', 'add');
     ga(
       'main.send',
       'event',

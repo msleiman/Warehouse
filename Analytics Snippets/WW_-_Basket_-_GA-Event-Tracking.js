@@ -33,6 +33,7 @@ $(function(){
       'category': $(this).parents('tbody').find('.item-title a').attr('href').split('/')[3],
       'variant': eventLabel.slice(-2) // Last two digits of SKU = colour ID
     });
+    ga('main.ec:setAction', 'remove');
     ga(
       'main.send',
       'event',

@@ -162,7 +162,7 @@ $(function(){
           'category': digitalData.page.product.masterCategory,
           'variant': digitalData.page.product.id.substring(0,8).slice(-2) // Last two digits of SKU = colour ID
         });
-        ga('ec:setAction', 'add');
+        ga('main.ec:setAction', 'add');
         ga(
           'main.send',
           'event',
