@@ -178,7 +178,7 @@ function fireLinksharePixel() {
           }
 
           if (userReceivedAPromocodeDiscount == true) {
-            linkshareTrackingPixel += '|-' + Math.floor(userPromocodeDiscountAmount * 0.833333 * 100).toString();
+            linkshareTrackingPixel += '|' + Math.floor(userPromocodeDiscountAmount * 0.833333 * 100).toString();
           }
 
           // Add in currency of this order
