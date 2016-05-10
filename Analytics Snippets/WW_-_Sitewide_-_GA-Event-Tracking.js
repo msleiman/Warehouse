@@ -61,7 +61,15 @@ $(function(){
   $('body').on('click', '.search-suggestion-right-panel-product', function(){
     var searchTerm = $('input#q').val();
     var numberOfAutoSuggestedSearchResults = $('.search-suggestion-right-panel-product, .search-suggestion-right-panel-product-last').length.toString();
-    var vpvURL = document.location.pathname + '/vpv/search/' + searchTerm;
+    var pathname = document.location.pathname;
+
+    // If the current pathname has a '/' at the end (e.g. /gb/jewellery/), then do not add a '/' to the beginning of the VPV URL.
+    if ( pathname.substring(pathname.length -1) == '/' ) {
+      var vpvURL = pathname + 'vpv/search/' + searchTerm;
+    }
+    else {
+      var vpvURL = pathname + '/vpv/search/' + searchTerm;
+    }
 
     ga('main.set', { 'dimension9': numberOfAutoSuggestedSearchResults } );
     ga('rollUp.set', { 'dimension9': numberOfAutoSuggestedSearchResults } );
