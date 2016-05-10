@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta name="robots" content="noindex, nofollow">
+		<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+		<title>Warehouse URL blog converter</title>
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.0/jquery.min.js"></script>
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+		<script src="url-converter.js"></script>
+	</head>
+	<body class="container-fluid">
+
+		<div class="row">
+
+			<div class="col-md-8 col-md-push-2">
+				<h1>Warehouse URL blog converter</h1>
+				<h4>This takes a WordPress URL and converts it into a URL that you can use in eDialog. This converted URL
+					will work even when eDialog adds parameters to the URL.
+				</h4>
+
+				<div class="panel panel-default" style="margin-top:30px;background:#000000">
+					<div class="panel-body">
+						<div class="form-group">
+							<input id="inputUrl" class="form-control" placeholder="Paste in the URL WordPress has generated for you - e.g. https://blog.warehouse.co.uk/blog/2015/style/16847-the-ss16-accessories-report" />
+							<button class="btn btn-default" style="margin-top: 15px;">Submit</button>
+						</div>
+					</div>
+				</div>
+
+
+				<div id="outputUrl">
+					<p>
+						<mark>Generated URL:</mark>
+					</p>
+					<h3></h3>
+				</div>
+
+			</div>
+
+	  </div>
+
+	</body>
+</html>
