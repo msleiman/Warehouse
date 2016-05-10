@@ -1,11 +1,23 @@
 $(function() {
 
-  $(document).on('click', '.hphero > a', function() {
-    ga('main.send', 'event', 'homepage', 'hero_click', $(this).parent().attr('id').toLowerCase() + '_-_' + $(this).attr('href'));
+  $('#hphero1').click(function(){
+    ga('main.send', 'event', 'Homepage', 'Hero 1', $(this).find('a').attr('href'));
   });
 
-  $(document).on('click', '.hphalf > a', function() {
-    ga('main.send', 'event', 'homepage', 'half-box_click', $(this).parent().attr('id').toLowerCase() + '_-_' + $(this).attr('href'));
+  $('#hphero2').click(function(){
+    ga('main.send', 'event', 'Homepage', 'Hero 2', $(this).find('a').attr('href'));
   });
-  
+
+  $('#hphero3').click(function(){
+    ga('main.send', 'event', 'Homepage', 'Hero 3', $(this).find('a').attr('href'));
+  });
+
+  $('div[data-ga-label="2-slice-left"], div[data-ga-label="2-slice-right"]').click(function(){
+    ga('main.send', 'event', 'Homepage', 'Top Section 1', $(this).find('a').attr('href'));
+  });
+
+  $('div[data-ga-label="9-slice-left"], div[data-ga-label="9-slice-right"]').click(function(){
+    ga('main.send', 'event', 'Homepage', 'Top Section 2', $(this).find('a').attr('href'));
+  });
+
 });
