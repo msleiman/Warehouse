@@ -81,6 +81,32 @@ $(function(){
 				}
 			}
 		});
+
+		$('#storeAvailablityForm').submit(function(){
+			console.log('form submitted');
+			setTimeout(function(){
+				$('li.store:not(.hidden) a').click(function(){ // When a store name is clicked on...
+
+					var storeName = $(this).attr('title');
+					// Get first 3 digits of postcode entered.
+					var addressArray = $('#dwfrm_storelocator_postalCode').val().split(' ');
+					for (var i = 0; i < addressArray.length; i++) {
+						if (addressArray[i].match(/\d+/g) != null) { // If the item in the array contains a number (i.e. is a postcode), send it as a custom dimension.
+							ga( 'main.set', { 'dimension13': addressArray[i].substring(0,3) } );
+							ga(
+								'main.send',
+								'event',
+								'Shop by store',
+								'Store',
+								storeName
+							);
+							break;
+						}
+					}
+				});
+			}, 1000);
+		});
+
 	});
 
   // Filters
