@@ -93,13 +93,10 @@ $(function(){
 					for (var i = 0; i < addressArray.length; i++) {
 						if (addressArray[i].match(/\d+/g) != null) { // If the item in the array contains a number (i.e. is a postcode), send it as a custom dimension.
 							ga( 'main.set', { 'dimension13': addressArray[i].substring(0,3) } );
-							ga(
-								'main.send',
-								'event',
-								'Shop by store',
-								'Store',
-								storeName
-							);
+							ga( 'rollUp.set', { 'dimension13': addressArray[i].substring(0,3) } );
+
+							ga( 'main.send', 'event', 'Shop by store', 'Store', storeName );
+							ga( 'rollUp.send', 'event', 'Shop by store', 'Store', storeName );
 							break;
 						}
 					}
