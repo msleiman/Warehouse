@@ -5,8 +5,8 @@ $(function(){
 		ga('main.ec:setAction','checkout', {'step': 2});
 		ga('rollUp.ec:setAction','checkout', {'step': 2});
 
-		ga('main.send', 'pageview', '/checkout/vpv/login');
-    ga('rollUp.send', 'pageview', '/checkout/vpv/login');
+		ga('main.send', 'pageview', '/' + digitalData.site.country.toLowerCase() + '/checkout/vpv/login');
+    ga('rollUp.send', 'pageview', '/' + digitalData.site.country.toLowerCase() + '/checkout/vpv/login');
 	}
 
 	$( '#RegistrationForm' ).on( 'blur', 'input, select, checkbox', function(){
@@ -92,8 +92,8 @@ $(function(){
 		else { // If the user was already logged in before checkout, send a VPV.
 			document.cookie = 'userCheckoutType=userLoggedInBeforeCheckout;path=/';
 
-			ga('main.send', 'pageview', '/checkout/vpv/registered');
-	    ga('rollUp.send', 'pageview', '/checkout/vpv/registered');
+			ga('main.send', 'pageview', '/' + digitalData.site.country.toLowerCase() + '/checkout/vpv/registered');
+	    ga('rollUp.send', 'pageview', '/' + digitalData.site.country.toLowerCase() + '/checkout/vpv/registered');
 		}
 
 		$('body').on('click', '#address-form .button_primary', function(){

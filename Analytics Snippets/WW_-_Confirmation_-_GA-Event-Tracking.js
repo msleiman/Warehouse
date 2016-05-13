@@ -53,13 +53,13 @@
       var userCheckoutType = splitCookieArray[i].split('=').pop(); // Get the user checkout type (e.g. guest) from a session cookie that was set during checkout.
 
       if (userCheckoutType == 'userUsingGuestCheckout') {
-        ga('main.send', 'pageview', '/confirmorder/vpv/guest');
-  	    ga('rollUp.send', 'pageview', '/confirmorder/vpv/guest');
+        ga('main.send', 'pageview', '/' + digitalData.site.country.toLowerCase() + '/confirmorder/vpv/guest');
+  	    ga('rollUp.send', 'pageview', '/' + digitalData.site.country.toLowerCase() + '/confirmorder/vpv/guest');
       }
 
       else { // If the user didn't use Guest Checkout, they must be registered. Send a VPV.
-        ga('main.send', 'pageview', '/confirmorder/vpv/registered');
-  	    ga('rollUp.send', 'pageview', '/confirmorder/vpv/registered');
+        ga('main.send', 'pageview', '/' + digitalData.site.country.toLowerCase() + '/confirmorder/vpv/registered');
+  	    ga('rollUp.send', 'pageview', '/' + digitalData.site.country.toLowerCase() + '/confirmorder/vpv/registered');
       }
       break;
     }

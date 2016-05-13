@@ -5,12 +5,12 @@ $(function(){
 
   // Send virtual pageviews depending on if the customer is already logged in or not
   if (digitalData.customer.id.length > 0) {
-    ga('main.send', 'pageview', '/cart/vpv/registered');
-    ga('rollUp.send', 'pageview', '/cart/vpv/registered');
+    ga('main.send', 'pageview', '/' + digitalData.site.country.toLowerCase() + '/cart/vpv/registered');
+    ga('rollUp.send', 'pageview', '/' + digitalData.site.country.toLowerCase() + '/cart/vpv/registered');
   }
   else {
-    ga('main.send', 'pageview', '/cart/vpv/guest');
-    ga('rollUp.send', 'pageview', '/cart/vpv/guest');
+    ga('main.send', 'pageview', '/' + digitalData.site.country.toLowerCase() + '/cart/vpv/guest');
+    ga('rollUp.send', 'pageview', '/' + digitalData.site.country.toLowerCase() + '/cart/vpv/guest');
   }
 
   // Click on Just Arrived in nav
