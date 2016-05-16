@@ -15,7 +15,7 @@ $(function(){
 	});
 
 	// When something on the search results page (search page or category page - the latter is a search too) is clicked
-	$(window).load(function(){
+	$(document).ready(function(){
 		$( '.search-result-content' ).on( 'click', '.quickviewbutton, .thumb-link, .product-action, .name-link, .save_for_later', function(){
 			if ( $( '.sort-by_container > #imagesize' ).val() == 0 ) {
 				ga( 'main.set', { 'dimension3': 'large' } );
@@ -127,7 +127,7 @@ $(function(){
   });
 
 	// When the user reaches the end of the PLP
-	$(window).load(function(){ // Use window load as otherwise the GA event fires prematurely.
+	$(document).ready(function(){
 		setTimeout(function(){
 			if (window.location.href.indexOf('search?') >= 0) { // If the user is on a search results page, fire a different GA event.
 				var refreshInterval = setInterval(function() { // Start a timer that checks to see if the user is at the end of the page (minus footer and Recently Viewed sections)
