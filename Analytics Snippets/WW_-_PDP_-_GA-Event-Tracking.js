@@ -1,4 +1,11 @@
 $(function(){
+
+  // Clicking on a Baynote recommended product
+  $('body').on('click', '#recommended-products .baynote-pod-list-item', function(){
+    var clickedBaynoteRecommendedProduct = $(this).find('.product-tile').attr('data-itemid').substring(0,8);
+    ga('main.send', 'event', 'We recommend', 'Click', clickedBaynoteRecommendedProduct);
+  });
+
   // Save item
   $('body').on('click', '.product_details .save_for_later', function() {
     var eventLabel = $('.updatingPdpMainsku').text().trim();
@@ -21,6 +28,7 @@ $(function(){
       eventLabel
     );
   });
+
   // Information tabs
   $('.product_tabs .tabs_buttons>li a').click(function() {
     var eventAction = $(this).text().trim();
@@ -33,6 +41,7 @@ $(function(){
       eventLabel
     );
   });
+
   // Picture interaction
   $('.product_images').on(
     'click',
@@ -58,6 +67,7 @@ $(function(){
       );
     }
   );
+
   $('#thumbnails').on('click', '.thumbnail-link', function() {
     var eventLabel = $('.updatingPdpMainsku').text().trim();
     ga(
@@ -68,6 +78,7 @@ $(function(){
       eventLabel
     );
   });
+
   // Find in a store button click
   $('#check-store-availability').click(function() {
     var eventLabel = $('.updatingPdpMainsku').text().trim();
@@ -95,6 +106,7 @@ $(function(){
       eventLabel
     );
   });
+
   // Find in a store - Find nearest button
   $('body').on('click', '#nearest-store', function() {
     var eventLabel = $('.updatingPdpMainsku').text().trim();
@@ -123,7 +135,6 @@ $(function(){
         sizesOutOfStock += outOfStockSize; // Add to string
       }
     });
-
     ga( 'main.set', { 'dimension1': sizesOutOfStock } );
     ga(
       'main.send',
@@ -132,8 +143,8 @@ $(function(){
       'Click',
       eventLabel
     );
-
   });
+
   // Next/Previous
   $('#product-nav-container').on('click', 'a', function(e) {
     var eventAction = '';
@@ -151,6 +162,7 @@ $(function(){
       eventLabel
     );
   });
+
   // Add to bag
   $('.product_details').on('click', '.action-addtocart', function() {
     setTimeout(function () {
@@ -173,6 +185,7 @@ $(function(){
       }
     }, 100);
   });
+
   // Click 'Read more' link
   $('a.morelink').click(function(){
     var eventLabel = $('.updatingPdpMainsku').text().trim();
@@ -184,6 +197,7 @@ $(function(){
       eventLabel
     );
   });
+
   // Social Share
   $('.product_details').on('click', '.social_buttons a', function(e) {
       var eventLabel = '';
