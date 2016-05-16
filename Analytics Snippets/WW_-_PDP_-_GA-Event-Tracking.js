@@ -17,6 +17,7 @@ $(function(){
       eventLabel
     );
   });
+
   // Shop the look
   $('body').on('click', '#shop-the-look', function() {
     var eventLabel = $('.updatingPdpMainsku').text().trim();
@@ -68,6 +69,7 @@ $(function(){
     }
   );
 
+  // Track clicks on thumbnails
   $('#thumbnails').on('click', '.thumbnail-link', function() {
     var eventLabel = $('.updatingPdpMainsku').text().trim();
     ga(
@@ -90,6 +92,7 @@ $(function(){
       eventLabel
     );
   });
+
   // Find in a store - Postcode
   $('body').on('click', 'button.store-locator-search', function() {
     var eventLabel = $('.updatingPdpMainsku').text().trim();
@@ -123,8 +126,9 @@ $(function(){
       eventLabel
     );
   });
+
   // Size out of stock
-  $('a.va-size-select').click(function() {
+  $('body').on('click', 'a.va-size-select', function() {
     var eventLabel = $('.updatingPdpMainsku').text().trim();
     var sizesOutOfStock = ''; // empty string to store sizes that are OOS
 
