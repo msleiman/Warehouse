@@ -21,6 +21,18 @@ $(function(){
     );
   });
 
+  // Track item edit from wishlist
+  $('body').on('click', '.quickviewbutton.edit_btn', function(){
+    var editedItemSKU = $(this).parents('.product-tile').attr('data-itemid').substring(0,8);
+    ga(
+      'main.send',
+      'event',
+      'Wishlist',
+      'Edit',
+      editedItemSKU
+    );
+  });
+
   // When a user drags and drops items in their wishlist, fire an event. Wait until the window has loaded for jQuery Sortable to initialise.
   $(window).load(function(){
     // Fire event by attaching the change listener to the jQuery UI Sortable plugin.
