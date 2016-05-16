@@ -2,41 +2,50 @@ var uaurl = '//www.google-analytics.com/analytics.js';
 //var uaurl = '//www.google-analytics.com/analytics_debug.js';
 var gaid;
 var row = false;
-switch (window.digitalData.site.country) {
-  case 'GB':
-  case 'NI':
-    gaid = 'UA-72009637-1';
-    break;
-  case 'IE':
-    gaid = 'UA-72009637-2';
-    break;
-  case 'AU':
-  case 'NZ':
-    gaid = 'UA-72009637-3';
-    break;
-  case 'DE':
-  case 'AT':
-    gaid = 'UA-72009637-4';
-    break;
-  case 'FR':
-    gaid = 'UA-72009637-5';
-    break;
-  case 'NL':
-    gaid = 'UA-72009637-6';
-    break;
-  case 'SE':
-    gaid = 'UA-72009637-7';
-    break;
-  case 'US':
-  case 'CA':
-    gaid = 'UA-72009637-8';
-    break;
-  default:
-    //Rest of the World
-    gaid = 'UA-72009637-9';
-    row = true;
-    break;
+
+// If the loaded page is a blog page, define a Google Analytics tracker ID to use
+if ( window.location.pathname.indexOf('/blog') >= 0 ) {
+  gaid = 'UA-72009637-11';
 }
+
+else if (gaid === undefined) { // If the page is not a blog page, select a country-specific tracker.
+  switch (window.digitalData.site.country) {
+    case 'GB':
+    case 'NI':
+      gaid = 'UA-72009637-1';
+      break;
+    case 'IE':
+      gaid = 'UA-72009637-2';
+      break;
+    case 'AU':
+    case 'NZ':
+      gaid = 'UA-72009637-3';
+      break;
+    case 'DE':
+    case 'AT':
+      gaid = 'UA-72009637-4';
+      break;
+    case 'FR':
+      gaid = 'UA-72009637-5';
+      break;
+    case 'NL':
+      gaid = 'UA-72009637-6';
+      break;
+    case 'SE':
+      gaid = 'UA-72009637-7';
+      break;
+    case 'US':
+    case 'CA':
+      gaid = 'UA-72009637-8';
+      break;
+    default:
+      //Rest of the World
+      gaid = 'UA-72009637-9';
+      row = true;
+      break;
+  }
+}
+
 (function(i, s, o, g, r, a, m) {
   i['GoogleAnalyticsObject'] = r;
   i[r] = i[r] || function() {
@@ -95,7 +104,23 @@ if ( (digitalData.page.instanceID.indexOf('_Cart') >= 0) || (digitalData.page.in
   // The page is Basket/Cart, Checkout or Order Confirmation page. We have VPVs for these pages - do not fire regular pageviews.
 }
 
-else {
+else if ( window.location.pathname.indexOf('/blog') >= 0 ) { // If we are on a blog page, send a page view with correct titles.
+  ga('main.send', {
+    hitType: 'pageview',
+    page: digitalData.page.canonical || digitalData.page.url,
+    location: location.href,
+    title: document.title
+  });
+
+  ga('rollUp.send', {
+    hitType: 'pageview',
+    page: digitalData.page.canonical || digitalData.page.url,
+    location: location.href,
+    title: document.title
+  });
+}
+
+else { // If the page is a regular websit page, send a pageview
   ga('main.send', {
     hitType: 'pageview',
     page: digitalData.page.canonical || digitalData.page.url,
