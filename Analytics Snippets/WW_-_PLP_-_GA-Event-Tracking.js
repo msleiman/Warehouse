@@ -105,7 +105,7 @@ $(function(){
 	});
 
   // Filters
-  $('#main').on('click', '.filters_wrapper li a', function(e) {
+  $('#main').on('click', '.filters_wrapper ul:not(".available_in_store") li a', function(e) {
     var eventAction = '';
     if ($(e.currentTarget).parent().hasClass('selected')) {
       eventAction = 'Remove filter';
