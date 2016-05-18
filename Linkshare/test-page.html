@@ -50,7 +50,7 @@
 
       <div class="row alert alert-info">
         <div class="col-md-6">
-          <label>Referrer ID (one that does not supply promocodes is lMh2Xiq9xN0; one that supplies promocodes is SNgfG0hYjYc):</label><input class="form-control" id="referrer-id-value" />
+          <label>Referrer ID (one that does not supply promocodes is lMh2Xiq9xN0; one that supplies promocodes is 7fdK7OSF2L8):</label><input class="form-control" id="referrer-id-value" />
           <br />
           <button class="btn btn-primary" id="referrer-id-submit">Create referrer ID cookie</button>
         </div>
@@ -60,7 +60,7 @@
           <br />
           <button class="btn btn-primary" id="promocode-submit">Add promocode</button>
         </div>
-
+        <!--
         <div class="col-md-6" style="clear:both">
           <label>User last purchased an item (minutes ago from the current time):</label><input class="form-control" id="user-last-purchased-value" />
           <br />
@@ -72,7 +72,7 @@
           <br />
           <button class="btn btn-primary" id="user-last-visited-from-email-campaign-submit">Submit</button>
         </div>
-
+        -->
       </div>
 
       <div class="row">
@@ -80,8 +80,82 @@
       </div>
     </div>
 
-    <script src="digitalDataObjectOrderConfirmation.js"></script>
+
     <script>
+      // Add in an order object without any promocodes in it.
+      var digitalData = {
+        "site": {
+          "country": "GB",
+          "language": "en_GB",
+          "currency": "GBP",
+          "id": "Warehouse-UK"
+        },
+        "page": {
+          "title": "Warehouse - United Kingdom",
+          "id": "GB_OrderConfirmation",
+          "instanceID": "GB_OrderConfirmation_GB_OrderConfirmation",
+          "type": "OrderConfirmation",
+          "url": "https://www.warehouse.co.uk/gb/orderconfirmation",
+          "referralUrl": "https://live.adyen.com/hpp/pay.shtml",
+          "random": "370536075397471.44"
+        },
+        "orderId": "04009107",
+        "customer": {
+          "id": "5900026503",
+          "name": {
+            "prefix": "",
+            "firstName": "Dominic",
+            "lastName": "Eden"
+          },
+          "email": "dominic@gadabouting.com",
+          "status": "returning",
+          "address": {
+            "houseNumber": "88",
+            "address1": "Prothero Road",
+            "address2": "",
+            "address3": "",
+            "city": "London",
+            "postcode": "SW6 7LZ"
+          }
+        },
+        "bag": {
+          "totals": {
+            "grandTotal": "31.20",
+            "subTotal": "31.20",
+            "tax": "",
+            "discount": "-11.79",
+            "quantity": "1"
+          },
+          "promocodes": "",
+          "products": [
+            {
+            "id": "0256097010",
+            "price": "39.00",
+            "quantity": "1",
+            "discount": "0.00",
+            "name": "JACQUARD SLIM LEG TROUSER",
+            "colour": "LGRY",
+            "masterCategory": "TROUSERS AND SHORTS"
+            },
+            {
+              "id": "SAMPLESKU",
+              "price": "31.00",
+              "quantity": "1",
+              "discount": "0.00",
+              "name": "SAMPLE PRODUCT",
+              "colour": "LGRY",
+              "masterCategory": "TROUSERS AND SHORTS"
+            }
+          ]
+        },
+        "delivery": {
+          "id": "StandardDelivery",
+          "name": "Standard delivery in 3-5 days",
+          "price": "0.00"
+        }
+      }
+
+
       function deleteAllCookies() {
         var cookies = document.cookie.split(";");
 
@@ -109,7 +183,7 @@
         $('#promocode-submit').click(function(){
           if ( $('#promocode-value').val().length > 0 ) {
             var promocode = $('#promocode-value').val();
-            console.log('Promocode ' + promocode + ' added.');
+            console.log('Promocode "' + promocode + '" added.');
             digitalData.bag.promocodes = promocode;
           }
         });

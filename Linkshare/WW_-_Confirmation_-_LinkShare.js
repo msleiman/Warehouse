@@ -28,18 +28,7 @@ function fireLinksharePixel() {
         }
       }
 
-      var referralPartnersWhoSupplyPromocodes = ["SNgfG0hYjYc","GKxlq8aATrc","M0Btaa*1C/A","j27T8dfNK2Y","izUPF8VmRng","cee60rzNd0s",
-      "trXoB*GYSXg","gB*veoSGZ*I","5hFybtq1JGE","msEJUTIZPIc","eExdyzaFMJU","7JmHI9AonM4","LO*Bm04MZwo","e7oUVT7m07k",
-      "mXjg8EndEnU","VEDuFfiaY3w","8ILMXayhlms","PMLjQ05Vxh8","y65CiupGSs4","YthxajYG2HM","3w57gQxcGGY","vQuCZKBwqVA",
-      "eT0FHZ9YML8","3izd6hN5HL0","HorbUw/2HUk","COo67xzJ7ak","HZTiTQY91mw","RBmn*k1W7V8","6oDRBot4Bb0","5gPCHz8CFb0",
-      "z6BIKIwQ3BY","zpRF/YcWXXo","09T6PHqZTKA","khoAjSF0w9c","pevSgrJXxN4","Ux1ppAflp/Q","y0XP3tcUyus","LxResIKWjfg",
-      "h*1hRBiaxzk","B6jY6bUx3q8","KOntE1mUxyw","/Opi820SY/0","uIvfknSTTzk","YxHs42358jk","x*SKPIZqpRw","ZF0TcNPEnH8",
-      "XLP/T7bMZC0","3zxbuy0ybU0","TodWoqWcHJI","bJIUz45Afb0","9CGqNUoKmgs","WxZXCYwb5Kw","DoZEtukLMxs","D*Cr3GUE9zI",
-      "QF9ufS8kUao","kaaWQMSaDFo","mwcg1GLXqRY","gkagJ3kjyfI","q4HiRh0*Hr0","*HfdapVdZS0","YKIqMWuOxY0","7fdK7OSF2L8",
-      "Lw35eCRxfKo","if*7KCltIj4","sZJy7sNwtFo","zgt6V8OWHkg","JQVrNPzxpPM","Hlwxd9/QOT4","gg42cCWzNdg","fvF4BH3LWEA",
-      "FsBH6IXGhA4","KCcFoIlFdRk","ry9lt6MvnU8","iL8bX0peoXc","x7G3utLuOcA"];
-
-      var referralPartnerPromoCodes = ["LSTEST20"];
+      var referralPartnersWhoSupplyPromocodes = ["LO*Bm04MZwo", "YthxajYG2HM", "izUPF8VmRng", "JQVrNPzxpPM", "OOTtr9mlaCk", "KCcFoIlFdRk", "7fdK7OSF2L8"];
 
       // CONDITION 1:
       // Check if the referral partner is part of a list of partners that provide vouchers, and check that the user has applied any coupons.
@@ -58,22 +47,21 @@ function fireLinksharePixel() {
         return false; // If the user has not been referred by a partner who supplies coupons, then return false. This means the pixel can still fire.
       }
 
-      // This function returns true if the user has been referred by a partner who supplies promo codes, and the user used a referral partner promocode.
-      function userUsedPromocodeFromReferralPartner() {
+      // This function returns true if the user has been referred by a partner who supplies promo codes, and the user used any promocode.
+      function userHasBeenReferredByPartnerWhoSuppliesPromocodesAndUserUsedPromocode() {
         if (userHasBeenReferredByPartnerWhoSuppliesPromocodes() == true) {
-          for (var i = 0; i < referralPartnerPromoCodes.length; i++) {
-            if (digitalData.bag.promocodes.indexOf(referralPartnerPromoCodes[i]) >= 0) { // If the promocodes used contain a referral partner voucher code
-              console.log('The user has used a promo code from a referral partner.');
-              return true;
-              break;
-            }
+          if (digitalData.bag.promocodes.length > 0) {
+            console.log('The user has come from a referral partner who provides a promocode, and they used promocode(s) "' + digitalData.bag.promocodes + '"');
+            return true;
+          }
+          else {
+            console.error('The user came from a referral partner that provides promocodes, but did not apply any promocodes. The pixel will not fire.');
+            return false; // return false if the user did not use a promocode from a referral partner.
           }
         }
-        console.error('The user has not used a promo code from a referral partner. The pixel will not fire.');
-        return false; // return false if the user did not use a promocode from a referral partner.
       }
 
-      // CONDITION 2:
+      // CONDITION 2 - ** CURRENTLY DISABLED **:
       // User has purchased from our site within the last 30 minutes. If this is the case, do not track.
       // This function returns true if the user has purchased from our site within the last 30 minutes.
       function userPurchasedWithinLast30Minutes() {
@@ -96,7 +84,7 @@ function fireLinksharePixel() {
         return false; // Return false if the cookie doesn't exist.
       }
 
-      // CONDITION 3:
+      // CONDITION 3 - ** CURRENTLY DISABLED **:
       // If the user came to the site less than 24 hours before from one of our own emails, do not track.
       // Find when the user came to the site from the email campaign by checking the timestamp of the __utmz parameter which is set by Google Analytics.
       // This function returns true when the user did visit the site from an email campaign in the last 24 hours.
@@ -122,12 +110,12 @@ function fireLinksharePixel() {
 
       // Now work out if we should show the tracking pixel or not.
       if (
-          (userHasBeenReferredByPartnerWhoSuppliesPromocodes() == false || userUsedPromocodeFromReferralPartner() == true) && // If user is referred from a referral partner that supplies promo codes, they must use a promo code, or they must be referred by a partner that does not use promo codes.
-          (userPurchasedWithinLast30Minutes() == false) &&
-          (userVisitedSiteFromEmailCampaignWithinLast24Hours() == false)
+          (userHasBeenReferredByPartnerWhoSuppliesPromocodes() == false || userHasBeenReferredByPartnerWhoSuppliesPromocodesAndUserUsedPromocode() == true) // If user is referred from a referral partner that supplies promo codes, they must use a promo code, or they must be referred by a partner that does not use promo codes.
+          // && (userPurchasedWithinLast30Minutes() == false)
+          // && (userVisitedSiteFromEmailCampaignWithinLast24Hours() == false)
         ) {
           // Create the Linkshare tracking pixel
-          console.log('Creating linkshareTrackingPixel...');
+          console.log('The Linkshare tracking pixel should be fired. Creating pixel...');
           var linkshareTrackingPixel = '<img src="https://track.linksynergy.com/ep?';
           linkshareTrackingPixel += 'mid=36373'; // Add in merchant ID
           linkshareTrackingPixel += '&ord=' + digitalData.orderId; // Add in order ID
