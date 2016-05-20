@@ -40,7 +40,7 @@ $(function(){
 			var productImageURL = $( this ).parents( '.product-tile-grid' ).find( '.flex-active-slide .thumb-link > img' ).attr( 'src' );
 			var eightDigitSKU = productImageURL.split('/').pop().split('_')[1];
 			var sixDigitSKU = eightDigitSKU.substring(0,6);
-			var productName = $(".product-tile[data-itemid='" + sixDigitSKU + "']").find('a.name-link').text().trim();
+			var productName = $(".product-tile[data-itemid='" + sixDigitSKU + "']").find('a.name-link').attr('title');
 
 			// If the user has clicked to add the item to cart (i.e. Quick Buy)
 			if ( $(this).hasClass('quickviewbutton') ) {

@@ -1,7 +1,7 @@
 $(function(){
 
 	// Send virtual pageviews if the customer is not logged in when checking out and they are redirected to the login/register page.
-	if (digitalData.page.title.indexOf('Log in' || 'Register') >= 0) {
+	if (digitalData.page.title.indexOf('Log in' || 'Register') >= 0 && digitalData.page.referralUrl.indexOf('cart') >= 0) {
 		ga('main.ec:setAction','checkout', {'step': 2});
 		ga('rollUp.ec:setAction','checkout', {'step': 2});
 
