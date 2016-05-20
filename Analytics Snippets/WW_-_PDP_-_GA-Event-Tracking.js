@@ -127,7 +127,8 @@ $(function(){
     );
   });
 
-  // Size out of stock
+  // Report size out of stock
+  var reportSizesOutOfStock = true;
   $('body').on('click', 'a.va-size-select', function() {
     var eventLabel = $('.updatingPdpMainsku').text().trim();
     var sizesOutOfStock = ''; // empty string to store sizes that are OOS
@@ -139,14 +140,18 @@ $(function(){
         sizesOutOfStock += outOfStockSize; // Add to string
       }
     });
-    ga( 'main.set', { 'dimension1': sizesOutOfStock } );
-    ga(
-      'main.send',
-      'event',
-      'Size select',
-      'Click',
-      eventLabel
-    );
+
+    if (reportSizesOutOfStock == true) {
+      ga( 'main.set', { 'dimension1': sizesOutOfStock } );
+      ga(
+        'main.send',
+        'event',
+        'Size select',
+        'Click',
+        eventLabel
+      );
+      reportSizesOutOfStock = false; // Set it to false to stop it being triggered again if the user clicks the menu again.
+    }
   });
 
   // Next/Previous
