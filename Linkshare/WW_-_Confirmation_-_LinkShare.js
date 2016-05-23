@@ -26,7 +26,7 @@ function fireLinksharePixel() {
           console.log('Linkshare cookie detected - referrer ID is ' + linkshareReferrerID);
         }
         else if (splitCookieArray[i].indexOf('linkshareReferralLastArrivalTime') >= 0) {
-          var linkshareReferralLastArrivalTime = splitCookieArray[i].split('=').pop(); // Get Linkshare referral ID from cookie.
+          linkshareReferralLastArrivalTime = parseInt(splitCookieArray[i].split('=').pop()); // Get Linkshare referral ID from cookie.
           console.log('Linkshare last arrival time is ' + linkshareReferralLastArrivalTime);
         }
       }
@@ -117,8 +117,9 @@ function fireLinksharePixel() {
       function userAddedToBagWithinLast20MinutesBeforeLinkshareReferralArrival() {
         for (var i = 0; i < splitCookieArray.length; i++) {
           if (splitCookieArray[i].indexOf('lastAddToBagEventTimestamp') >= 0) {
-            var userLastAddedToBagTimestamp = parseInt(splitCookieArray[i].split('=')[1]);
+            userLastAddedToBagTimestamp = parseInt(splitCookieArray[i].split('=')[1]);
             console.log('The user last added to their bag at timestamp ' + userLastAddedToBagTimestamp);
+            console.log('Linkshare referral last arrival timestamp is ' + linkshareReferralLastArrivalTime);
             var addToBagVsReferralTimestampDifference = linkshareReferralLastArrivalTime - userLastAddedToBagTimestamp;
             console.log('The time difference between adding to bag and being referred from Linkshare is ' + addToBagVsReferralTimestampDifference.toString() + ' seconds.');
             if ( (addToBagVsReferralTimestampDifference >= 0) && (addToBagVsReferralTimestampDifference <= 1200) ) { // If the time difference between now and the last time the user added to bag is less or equal to 20 minutes
@@ -132,6 +133,10 @@ function fireLinksharePixel() {
             }
             if ( (addToBagVsReferralTimestampDifference > 1200) ) {
               console.log('The user last added to bag more than 20 minutes after arriving from Linkshare. Continue.');
+              return false;
+            }
+            else {
+              console.log('Error calculating add to bag vs referral time difference. Continue anyway.');
               return false;
             }
           }
