@@ -31,17 +31,20 @@
 
       <ul class="list-group">
         <li>
-          If the referral partner is part of a list of partners that provide vouchers, check that the user has applied any coupons from that referral partner. If not, do not track.
+          If the referral partner is part of a list of partners that provide vouchers, check that the user has applied any coupons. If not, do not track.
         </li>
         <li>
            If the referral partner doesn't provide vouchers, don't check for coupons, this rule doesn't apply.
         </li>
         <li>
+           If the user added to bag within the last 20 minutes before arriving from Linkshare, do not track.
+        </li>
+        <!-- OLD RULES <li>
            If the user purchased 30 minutes before landing on the site from the referrer, don't track.
         </li>
         <li>
            If the user came to the site less than 24 hours before from one of our own emails, do not track.
-        </li>
+        </li> -->
       </ul>
 
       <div class="row">
@@ -59,6 +62,18 @@
           <label>Optional promocode (sample promocode is LSTEST20):</label><input class="form-control" id="promocode-value" />
           <br />
           <button class="btn btn-primary" id="promocode-submit">Add promocode</button>
+        </div>
+
+        <div class="col-md-6">
+          <label>User arrived from Linkshare (minutes ago):</label><input class="form-control" id="linkshare-arrival-time-value" />
+          <br />
+          <button class="btn btn-primary" id="linkshare-arrival-time-submit">Add Linkshare arrival time</button>
+        </div>
+
+        <div class="col-md-6">
+          <label>User added to bag (minutes ago):</label><input class="form-control" id="last-added-to-bag-value" />
+          <br />
+          <button class="btn btn-primary" id="last-added-to-bag-submit">Add last added to bag time</button>
         </div>
         <!--
         <div class="col-md-6" style="clear:both">
@@ -204,6 +219,24 @@
             var userLastPurchasedTimestamp = Math.floor(Date.now()/1000) - userLastVisitedFromEmailCampaignSecondsAgo;
             document.cookie = '__utmz=1.' + userLastPurchasedTimestamp + '.2.2.utmcsr=email|utmccn=WH_2016wk06_GAMECHANGERS_TIMETEST_10AM_03042016|utmcmd=email|utmcct=1015042142';
             console.log('User last visited the site from an email campaign ' + userLastVisitedFromEmailCampaignHoursAgo + ' hours ago - set __utmz cookie to ' + userLastPurchasedTimestamp);
+          }
+        });
+
+        $('#linkshare-arrival-time-submit').click(function(){
+          if ( $('#linkshare-arrival-time-value').val().length > 0 ) {
+            var userArrivedSecondsAgo = parseInt($('#linkshare-arrival-time-value').val()) * 60;
+            console.log('User arrived ' + userArrivedSecondsAgo + ' seconds ago.')
+            document.cookie = 'linkshareReferralLastArrivalTime=' + (Math.round(new Date().getTime()/1000) - userArrivedSecondsAgo).toString() + ';';
+            console.log('Calculating linkshareReferralLastArrivalTime timestamp as ' + (Math.round(new Date().getTime()/1000) - userArrivedSecondsAgo).toString());
+          }
+        });
+
+        $('#last-added-to-bag-submit').click(function(){
+          if ( $('#last-added-to-bag-value').val().length > 0 ) {
+            var userLastAddedToBagSecondsAgo = parseInt($('#last-added-to-bag-value').val()) * 60;
+            console.log('User last added to bag ' + userLastAddedToBagSecondsAgo + ' seconds ago.')
+            document.cookie = 'lastAddToBagEventTimestamp=' + (Math.round(new Date().getTime()/1000) - userLastAddedToBagSecondsAgo).toString() + ';';
+            console.log('Calculating user last added to bag timestamp as ' + (Math.round(new Date().getTime()/1000) - userLastAddedToBagSecondsAgo).toString());
           }
         });
 

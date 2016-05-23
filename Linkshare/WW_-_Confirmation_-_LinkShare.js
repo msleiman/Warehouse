@@ -24,7 +24,10 @@ function fireLinksharePixel() {
         if (splitCookieArray[i].indexOf('linkshareReferrerID') >= 0) {
           var linkshareReferrerID = splitCookieArray[i].split('=').pop(); // Get Linkshare referral ID from cookie.
           console.log('Linkshare cookie detected - referrer ID is ' + linkshareReferrerID);
-          break;
+        }
+        else if (splitCookieArray[i].indexOf('linkshareReferralLastArrivalTime') >= 0) {
+          var linkshareReferralLastArrivalTime = splitCookieArray[i].split('=').pop(); // Get Linkshare referral ID from cookie.
+          console.log('Linkshare last arrival time is ' + linkshareReferralLastArrivalTime);
         }
       }
 
@@ -89,7 +92,6 @@ function fireLinksharePixel() {
       // Find when the user came to the site from the email campaign by checking the timestamp of the __utmz parameter which is set by Google Analytics.
       // This function returns true when the user did visit the site from an email campaign in the last 24 hours.
       function userVisitedSiteFromEmailCampaignWithinLast24Hours() {
-        var splitCookieArray = document.cookie.split(';')
         for (var i = 0; i < splitCookieArray.length; i++) {
           if (splitCookieArray[i].indexOf('__utmz') >= 0) {
             var gaEmailCampaignArrivalTimestamp = parseInt(splitCookieArray[i].split('=')[1].split('.')[1]);
@@ -108,9 +110,38 @@ function fireLinksharePixel() {
         return false; // Return false if we could not find the cookie.
       };
 
+      // CONDITION 4:
+      // If the user has added something to their bag within the last 20 minutes before arriving from Linkshare, then return true.
+      // We track this because if a user has added something to their bag within the last 20 minutes and then arrives from Linkshare,
+      // we should not fire the pixel as they could go to Linkshare for a discount and return to us after intending to make a full price purchase.
+      function userAddedToBagWithinLast20MinutesBeforeLinkshareReferralArrival() {
+        for (var i = 0; i < splitCookieArray.length; i++) {
+          if (splitCookieArray[i].indexOf('lastAddToBagEventTimestamp') >= 0) {
+            var userLastAddedToBagTimestamp = parseInt(splitCookieArray[i].split('=')[1]);
+            console.log('The user last added to their bag at timestamp ' + userLastAddedToBagTimestamp);
+            var addToBagVsReferralTimestampDifference = linkshareReferralLastArrivalTime - userLastAddedToBagTimestamp;
+            console.log('The time difference between adding to bag and being referred from Linkshare is ' + addToBagVsReferralTimestampDifference.toString() + ' seconds.');
+            if ( (addToBagVsReferralTimestampDifference >= 0) && (addToBagVsReferralTimestampDifference <= 1200) ) { // If the time difference between now and the last time the user added to bag is less or equal to 20 minutes
+              console.error('The user last added to bag in the last 20 minutes or less before arriving from Linkshare. We will not fire a tracking pixel.');
+              return true;
+              break;
+            }
+            else if (addToBagVsReferralTimestampDifference < 0 ) {
+              console.log('The user last added to bag after arriving from Linkshare. Continue.');
+              return false;
+            }
+            if ( (addToBagVsReferralTimestampDifference > 1200) ) {
+              console.log('The user last added to bag more than 20 minutes after arriving from Linkshare. Continue.');
+              return false;
+            }
+          }
+        }
+      }
+
       // Now work out if we should show the tracking pixel or not.
       if (
           (userHasBeenReferredByPartnerWhoSuppliesPromocodes() == false || userHasBeenReferredByPartnerWhoSuppliesPromocodesAndUserUsedPromocode() == true) // If user is referred from a referral partner that supplies promo codes, they must use a promo code, or they must be referred by a partner that does not use promo codes.
+          && (userAddedToBagWithinLast20MinutesBeforeLinkshareReferralArrival() == false)
           // && (userPurchasedWithinLast30Minutes() == false)
           // && (userVisitedSiteFromEmailCampaignWithinLast24Hours() == false)
         ) {
