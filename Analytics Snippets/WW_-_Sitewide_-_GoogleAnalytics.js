@@ -6,6 +6,7 @@ var row = false;
 // If the loaded page is a blog page, define a Google Analytics tracker ID to use
 if ( window.location.pathname.indexOf('/blog') >= 0 ) {
   gaid = 'UA-72009637-11';
+  window.isBlogPage = true;
 }
 
 else if (gaid === undefined) { // If the page is not a blog page, select a country-specific tracker.
