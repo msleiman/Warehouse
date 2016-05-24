@@ -1,0 +1,27 @@
+<!-- Email Rate modal. This can be fired on all pages. -->
+
+<div id="rate-email" class="rate-email-popup" style="display:none">
+  <link rel="stylesheet" href="//blog.warehouse.co.uk/blog/DMW/assets/styles/rate-email.css">
+  <div class="rate-email-form">
+    <span class="close"></span>
+    <h2>Tell Us What You Think</h2>
+    <p>
+      <span data-to="1" class="fstar"></span>
+      <span data-to="2" class="fstar"></span>
+      <span data-to="3" class="fstar"></span>
+      <span data-to="4" class="fstar"></span>
+      <span data-to="5" class="fstar"></span>
+    </p>
+    <p>We value your opinion and want to hear your feedback about our weekly style updates.</p>
+    <form id="rate-email-comment-form" action="//blog.warehouse.co.uk/blog/projects/rate-email/comment.php" method="POST">
+      <input type="hidden" name="redirect" value="" />
+      <input type="hidden" name="rating" value="" />
+      <input type="hidden" name="id" value="" />
+      <p>Let us know what you like...</p>
+      <textarea name="likes" placeholder="Enter your likes"></textarea>
+      <p>... and what you don&apos;t.</p>
+      <textarea name="dislikes" placeholder="Enter your dislikes"></textarea>
+      <input type="submit" value="SUBMIT" class="call-to-action" />
+    </form>
+  </div>
+</div>
