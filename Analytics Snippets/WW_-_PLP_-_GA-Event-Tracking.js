@@ -7,9 +7,25 @@ $(function(){
 		$(window).scroll(function(){
 			if ($('li.grid-tile').length > numberOfProductsShown) {
 				numberOfProductsShown = $('li.grid-tile').length;
-				var currentPageNumber = window.location.search.split('=').pop() || '1'; // Get current page number. If no page number set in URL, set it to 1.
-				ga('main.send', 'pageview', document.location.pathname + 'vpv/length/' + currentPageNumber);
-		    ga('rollUp.send', 'pageview', document.location.pathname + 'vpv/length/' + currentPageNumber);
+
+				// If the user is on a search results page, send different events.
+				if (window.location.href.indexOf('search') >= 0) {
+					var currentPageNumber = window.location.search.split('=').pop() || digitalData.page.id.split('_').pop(); // Get current page number. If no page number set in URL, use the search term.
+					ga('main.send', 'pageview', document.location.pathname + '/vpv/length/' + currentPageNumber);
+			    ga('rollUp.send', 'pageview', document.location.pathname + '/vpv/length/' + currentPageNumber);
+				}
+
+				else {
+					if (window.location.search.indexOf('page') >= 0) {
+						var currentPageNumber = window.location.search.split('=').pop() // Get current page number.
+					}
+					else {
+						var currentPageNumber = '1'; // If no page number set in URL, set it to 1.
+					}
+					ga('main.send', 'pageview', document.location.pathname + 'vpv/length/' + currentPageNumber);
+			    ga('rollUp.send', 'pageview', document.location.pathname + 'vpv/length/' + currentPageNumber);
+				}
+
 			}
 		});
 	});
