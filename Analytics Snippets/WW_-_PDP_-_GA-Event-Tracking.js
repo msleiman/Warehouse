@@ -175,7 +175,7 @@ $(function(){
   // Add to bag
   $('.product_details').on('click', '.action-addtocart', function() {
     setTimeout(function () {
-      if ($('.select-product-size-message').length===0) {
+      if ( ($('.select-product-size-message').length === 0) || ($('a#onesize').text().trim() == 'Unsized') ) {
         var eventLabel = $('.updatingPdpMainsku').text().trim();
         ga('main.ec:addProduct',{
           'id': digitalData.page.product.id.substring(0,8),
