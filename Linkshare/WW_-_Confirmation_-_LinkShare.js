@@ -1,4 +1,4 @@
-function fireLinksharePixel() {
+function runLinksharePixelScript() {
   // Check for the presence of the Linkshare cookie to see if the user has come to the site from Linkshare in the last 30 days.
   // If it is present, we will show the tracking pixel on the Order Confirmation page.
   // Remember, the cookie is set to expire after 30 days so we don't need to check when it was set, just that it exists.
@@ -6,9 +6,9 @@ function fireLinksharePixel() {
     console.log('Linkshare referrer cookie detected.');
     if ( digitalData.page.type == 'OrderConfirmation') {
 
-      // Check if the user received a discount on their bag by using a promocode. If they did, record the amount as an integer.
+      // Check if the user used a promocode. If they did, record the discount amount.
       // Note: this is different to receiving a discount on a product because it is on sale.
-      if (parseFloat(digitalData.bag.totals.discount) < 0) {
+      if (digitalData.bag.promocodes.length > 0) {
         var userReceivedAPromocodeDiscount = true;
         var userPromocodeDiscountAmount = parseFloat(digitalData.bag.totals.discount);
         console.log('The user used a promo code to receive a discount on their order. We will send this to Linkshare if the pixel fires.');
@@ -143,76 +143,85 @@ function fireLinksharePixel() {
         }
       }
 
+      function generateLinkshareTrackingPixel(){
+        // Create the Linkshare tracking pixel
+        console.log('The Linkshare tracking pixel should be fired. Creating pixel...');
+        var linkshareTrackingPixel = '<img src="https://track.linksynergy.com/ep?';
+        linkshareTrackingPixel += 'mid=36373'; // Add in merchant ID
+        linkshareTrackingPixel += '&ord=' + digitalData.orderId; // Add in order ID
+        linkshareTrackingPixel += '&skulist='; // Add in order ID
+
+        // Generate a pipe-delimited ('|') list of SKUs in this order
+        for (var i = 0; i < Object.keys(digitalData.bag.products).length; i++) {
+          if (i != Object.keys(digitalData.bag.products).length - 1) { // If i is not the last element in the array, then add a pipe ('|')
+            linkshareTrackingPixel += digitalData.bag.products[i].id + '|';
+          }
+          else {
+            linkshareTrackingPixel += digitalData.bag.products[i].id;
+          }
+        }
+
+        if (userReceivedAPromocodeDiscount == true) {
+          linkshareTrackingPixel += '|Discount';
+        }
+
+        // Add in order quantities
+        linkshareTrackingPixel += '&qlist=';
+
+        // Generate a pipe-delimited ('|') list of quantities, in the same order as the skulist above
+        for (var i = 0; i < Object.keys(digitalData.bag.products).length; i++) {
+          if (i != Object.keys(digitalData.bag.products).length - 1) { // If i is not the last element in the array, then add a pipe ('|')
+            linkshareTrackingPixel += digitalData.bag.products[i].quantity + '|';
+          }
+          else {
+            linkshareTrackingPixel += digitalData.bag.products[i].quantity;
+          }
+        }
+
+        if (userReceivedAPromocodeDiscount == true) {
+          linkshareTrackingPixel += '|0';
+        }
+
+        // Add in order prices
+        linkshareTrackingPixel += '&amtlist=';
+
+        // Generate a pipe-delimited ('|') list of amounts for each item, in the same order as the skulist and qlist above
+        for (var i = 0; i < Object.keys(digitalData.bag.products).length; i++) {
+          if (i != Object.keys(digitalData.bag.products).length - 1) { // If i is not the last element in the array, then add a pipe ('|')
+            linkshareTrackingPixel += (Math.floor(digitalData.bag.products[i].price * 0.833333 * 100)) + '|'; // Multiply by 0.833333 to remove VAT
+          }
+          else {
+            linkshareTrackingPixel += Math.floor(digitalData.bag.products[i].price * 0.833333 * 100);
+          }
+        }
+
+        if (userReceivedAPromocodeDiscount == true) {
+          linkshareTrackingPixel += '|' + Math.floor(userPromocodeDiscountAmount * 0.833333 * 100).toString();
+        }
+
+        // Add in currency of this order
+        linkshareTrackingPixel += '&cur=' + digitalData.site.currency;
+        linkshareTrackingPixel += '&img=1">';
+
+        console.log(linkshareTrackingPixel);
+        console.log('Appending Linkshare tracking pixel to DOM...')
+        $('body').append(linkshareTrackingPixel);
+        console.log('Appended Linkshare tracking pixel to DOM.')
+      }
+
       // Now work out if we should show the tracking pixel or not.
-      if (
+      if (digitalData.site.country == 'US') {
+        console.log('The site country ID is "US" - we should skip the logic rules and just append the pixel.');
+        generateLinkshareTrackingPixel();
+      }
+
+      else if ( // Apply the logic rules. If they pass, then fire the tracking pixel.
           (userHasBeenReferredByPartnerWhoSuppliesPromocodes() == false || userHasBeenReferredByPartnerWhoSuppliesPromocodesAndUserUsedPromocode() == true) // If user is referred from a referral partner that supplies promo codes, they must use a promo code, or they must be referred by a partner that does not use promo codes.
           && (userAddedToBagWithinLast20MinutesBeforeLinkshareReferralArrival() == false)
           // && (userPurchasedWithinLast30Minutes() == false)
           // && (userVisitedSiteFromEmailCampaignWithinLast24Hours() == false)
-        ) {
-          // Create the Linkshare tracking pixel
-          console.log('The Linkshare tracking pixel should be fired. Creating pixel...');
-          var linkshareTrackingPixel = '<img src="https://track.linksynergy.com/ep?';
-          linkshareTrackingPixel += 'mid=36373'; // Add in merchant ID
-          linkshareTrackingPixel += '&ord=' + digitalData.orderId; // Add in order ID
-          linkshareTrackingPixel += '&skulist='; // Add in order ID
-
-          // Generate a pipe-delimited ('|') list of SKUs in this order
-          for (var i = 0; i < Object.keys(digitalData.bag.products).length; i++) {
-            if (i != Object.keys(digitalData.bag.products).length - 1) { // If i is not the last element in the array, then add a pipe ('|')
-              linkshareTrackingPixel += digitalData.bag.products[i].id + '|';
-            }
-            else {
-              linkshareTrackingPixel += digitalData.bag.products[i].id;
-            }
-          }
-
-          if (userReceivedAPromocodeDiscount == true) {
-            linkshareTrackingPixel += '|Discount';
-          }
-
-          // Add in order quantities
-          linkshareTrackingPixel += '&qlist=';
-
-          // Generate a pipe-delimited ('|') list of quantities, in the same order as the skulist above
-          for (var i = 0; i < Object.keys(digitalData.bag.products).length; i++) {
-            if (i != Object.keys(digitalData.bag.products).length - 1) { // If i is not the last element in the array, then add a pipe ('|')
-              linkshareTrackingPixel += digitalData.bag.products[i].quantity + '|';
-            }
-            else {
-              linkshareTrackingPixel += digitalData.bag.products[i].quantity;
-            }
-          }
-
-          if (userReceivedAPromocodeDiscount == true) {
-            linkshareTrackingPixel += '|0';
-          }
-
-          // Add in order prices
-          linkshareTrackingPixel += '&amtlist=';
-
-          // Generate a pipe-delimited ('|') list of amounts for each item, in the same order as the skulist and qlist above
-          for (var i = 0; i < Object.keys(digitalData.bag.products).length; i++) {
-            if (i != Object.keys(digitalData.bag.products).length - 1) { // If i is not the last element in the array, then add a pipe ('|')
-              linkshareTrackingPixel += (Math.floor(digitalData.bag.products[i].price * 0.833333 * 100)) + '|'; // Multiply by 0.833333 to remove VAT
-            }
-            else {
-              linkshareTrackingPixel += Math.floor(digitalData.bag.products[i].price * 0.833333 * 100);
-            }
-          }
-
-          if (userReceivedAPromocodeDiscount == true) {
-            linkshareTrackingPixel += '|' + Math.floor(userPromocodeDiscountAmount * 0.833333 * 100).toString();
-          }
-
-          // Add in currency of this order
-          linkshareTrackingPixel += '&cur=' + digitalData.site.currency;
-          linkshareTrackingPixel += '&img=1">';
-
-          console.log(linkshareTrackingPixel);
-          console.log('Appending Linkshare tracking pixel to DOM...')
-          $('body').append(linkshareTrackingPixel);
-          console.log('Appended Linkshare tracking pixel to DOM.')
+         )  {
+        generateLinkshareTrackingPixel();
       }
 
       else {
@@ -238,4 +247,4 @@ function fireLinksharePixel() {
 };
 
 // Run function. ** The below function call should be uncommented out for production, and commented out for test mode. **
-fireLinksharePixel();
+runLinksharePixelScript();

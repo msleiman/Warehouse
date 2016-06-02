@@ -52,25 +52,40 @@
       </div>
 
       <div class="row alert alert-info">
-        <div class="col-md-6">
-          <label>Referrer ID (one that does not supply promocodes is lMh2Xiq9xN0; one that supplies promocodes is 7fdK7OSF2L8):</label><input class="form-control" id="referrer-id-value" />
+
+        <div class="col-md-4">
+          <label>Select country ID</label>
+          <select class="form-control" id="country-value">
+            <option value="GB">GB</option>
+            <option value="US">US</option>
+          </select>
+          <br />
+          <button class="btn btn-primary" id="country-submit">Save country ID</button>
+        </div>
+
+        <div class="col-md-4">
+          <label>Referrer ID:</label>
+          <select class="form-control" id="referrer-id-value">
+            <option value="lMh2Xiq9xN0">lMh2Xiq9xN0 - does not supply promocodes</option>
+            <option value="7fdK7OSF2L8">7fdK7OSF2L8 - does supply promocodes</option>
+          </select>
           <br />
           <button class="btn btn-primary" id="referrer-id-submit">Create referrer ID cookie</button>
         </div>
 
-        <div class="col-md-6">
+        <div class="col-md-4">
           <label>Optional promocode (sample promocode is LSTEST20):</label><input class="form-control" id="promocode-value" />
           <br />
           <button class="btn btn-primary" id="promocode-submit">Add promocode</button>
         </div>
 
-        <div class="col-md-6">
+        <div class="col-md-4">
           <label>User arrived from Linkshare (minutes ago):</label><input class="form-control" id="linkshare-arrival-time-value" />
           <br />
           <button class="btn btn-primary" id="linkshare-arrival-time-submit">Add Linkshare arrival time</button>
         </div>
 
-        <div class="col-md-6">
+        <div class="col-md-4">
           <label>User added to bag (minutes ago):</label><input class="form-control" id="last-added-to-bag-value" />
           <br />
           <button class="btn btn-primary" id="last-added-to-bag-submit">Add last added to bag time</button>
@@ -189,6 +204,11 @@
           deleteAllCookies();
         });
 
+        $('#country-submit').click(function(){
+          digitalData.site.country = $('#country-value').val();
+          console.log('Country ID has been set as ' + $('#country-value').val());
+        });
+
         $('#referrer-id-submit').click(function(){
           var cookieValue = $('#referrer-id-value').val();
           document.cookie = 'linkshareReferrerID=' + cookieValue + ';';
@@ -241,7 +261,7 @@
         });
 
         $('#run-linkshare-script').click(function(){
-          fireLinksharePixel();
+          runLinksharePixelScript();
         });
 
       });
