@@ -107,9 +107,7 @@ $(function(){
 
 		// Submit action is blocked by Demandware code. We therefore need to listed for the click event.
 		setTimeout(function(){
-			console.log('adding click listener to shop by store');
 			$('.store-locator-search').click(function(){
-				console.log('form submitted');
 				setTimeout(function(){
 					$('li.store:not(.hidden) a').click(function(){ // When a store name is clicked on...
 
@@ -184,6 +182,20 @@ $(function(){
 				}, 200);
 			}
 		}, 2000);
+
+
+		// Track when the price slider is moved.
+		$('.price_slider #range_slider').slider({
+		  change: function( event, ui ) {
+				ga(
+					'main.send',
+					'event',
+					'LHN Price',
+					'LHN Price Filter',
+					'Slide'
+				);
+		  }
+		});
 
 	});
 

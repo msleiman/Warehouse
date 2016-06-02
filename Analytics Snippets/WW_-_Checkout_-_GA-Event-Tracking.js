@@ -28,7 +28,7 @@ $(function(){
 		}
 	});
 
-  // Checkout form - don't add blur function to student code input field as we have a separate event for that below
+  // Checkout form fields - don't add blur function to student code input field as we have a separate event for that below
   $('input,select','#primary, #secondary').not('input.voucher-code2, .apply-voucher2').blur(function() {
     var eventAction = $(this).parents('form').attr('id');
     var eventlabel = $('label[for="' + $(this).attr('name') + '"]');
