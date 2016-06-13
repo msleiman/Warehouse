@@ -69,16 +69,26 @@ $(function(){
 				setTimeout(function(){ // Set a delay to allow the Quick Buy modal to appear
 					var refreshInterval = setInterval(function(){
 						if ( $('.product-tile[data-itemid="' + sixDigitSKU + '"]').find('.action-addtocart.product-action.add-to-cart.button_primary').attr('title') == 'Add to Bag') {
-							console.log('found add to bag button');
 							$('.product-tile[data-itemid="' + sixDigitSKU + '"]').find('.action-addtocart.product-action.add-to-cart.button_primary').click(function(){
-							console.log('add to cart button clicked');
-							ga('main.ec:addProduct',{
+							var productPrice = $('.product-tile[data-itemid="' + sixDigitSKU + '"]').find('.product-price span').first().text().trim().substring(1);
+
+							// GA tracking
+							ga('main.ec:addProduct', {
 								'id': 		eightDigitSKU,
 								'name': 	productName,
 								'category': digitalData.page.category.id
 							});
 							ga('main.ec:setAction', 'add');
 							ga('main.send', 'event', 'Quick buy', 'Click', eightDigitSKU);
+
+							// Coremetrics tracking
+							cmCreateShopAction5Tag(
+			          eightDigitSKU,
+			          productName,
+			          "1",
+			          productPrice
+			        );
+
 							window.setLastAddToBagEventTimestampCookie(); // Set a cookie that contains a timestamp for this add to bag event. This function is set in Sitewide - Linkshare JS file.
 						});
 						clearInterval(refreshInterval);
