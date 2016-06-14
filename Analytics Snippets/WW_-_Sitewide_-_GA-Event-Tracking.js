@@ -200,4 +200,17 @@ $(function(){
     };
   }, 750);
 
+  $(document).ready(function(){
+    // Report an event when the user taps on the 'Back to Top' button on mobile
+    $('#back-to-top-mobile').click(function(){
+      ga(
+        'main.send',
+        'event',
+        'Mobile',
+        'Click',
+        'Tap Back to Top button'
+      );
+    });
+  });
+
 });
