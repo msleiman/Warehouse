@@ -210,8 +210,8 @@ function runLinksharePixelScript() {
       }
 
       // Now work out if we should show the tracking pixel or not.
-      if (digitalData.site.country == 'US') {
-        console.log('The site country ID is "US" - we should skip the logic rules and just append the pixel.');
+      if (digitalData.site.country == 'US' || digitalData.site.country == 'AU') {
+        console.log('The site country ID is "US" or "AU" - we should skip the logic rules and just append the pixel.');
         generateLinkshareTrackingPixel();
       }
 
