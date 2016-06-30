@@ -58,6 +58,7 @@
           <select class="form-control" id="country-value">
             <option value="GB">GB</option>
             <option value="US">US</option>
+            <option value="AU">AU</option>
           </select>
           <br />
           <button class="btn btn-primary" id="country-submit">Save country ID</button>
@@ -207,6 +208,19 @@
         $('#country-submit').click(function(){
           digitalData.site.country = $('#country-value').val();
           console.log('Country ID has been set as ' + $('#country-value').val());
+
+          if (digitalData.site.country == 'US')  {
+            digitalData.site.currency = 'USD';
+          }
+
+          else if (digitalData.site.country == 'AU') {
+            digitalData.site.currency = 'AUD';
+          }
+
+          else if (digitalData.site.country == 'GB') {
+            digitalData.site.currency = 'GBP';
+          }
+
         });
 
         $('#referrer-id-submit').click(function(){

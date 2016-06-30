@@ -33,6 +33,22 @@ function runLinksharePixelScript() {
 
       var referralPartnersWhoSupplyPromocodes = ["LO*Bm04MZwo", "YthxajYG2HM", "izUPF8VmRng", "JQVrNPzxpPM", "OOTtr9mlaCk", "KCcFoIlFdRk", "7fdK7OSF2L8"];
 
+      // Establish country merchant IDs and sales tax rates as a multiplier - so we can convert sale prices into prices before sales tax.
+      if (digitalData.site.country == 'US') {
+        var salesTaxMultiplier = 1; // No sales tax.
+        var merchantId = 'mid=39332';
+      }
+
+      else if (digitalData.site.country == 'AU') {
+        var salesTaxMultiplier = 1.1; // Sales tax of 10%
+        var merchantId = 'mid=39334';
+      }
+
+      else { // Everything else (UK)
+        var salesTaxMultiplier = 1.2; // Sales tax (VAT) of 20%
+        var merchantId = 'mid=36373';
+      }
+
       // CONDITION 1:
       // Check if the referral partner is part of a list of partners that provide vouchers, and check that the user has applied any coupons.
       // This is split into two functions.
@@ -146,8 +162,8 @@ function runLinksharePixelScript() {
       function generateLinkshareTrackingPixel(){
         // Create the Linkshare tracking pixel
         console.log('The Linkshare tracking pixel should be fired. Creating pixel...');
-        var linkshareTrackingPixel = '<img src="https://track.linksynergy.com/ep?';
-        linkshareTrackingPixel += 'mid=36373'; // Add in merchant ID
+        var linkshareTrackingPixel = '<img src="https://track.linksynergy.com/ep?' + merchantId;
+
         linkshareTrackingPixel += '&ord=' + digitalData.orderId; // Add in order ID
         linkshareTrackingPixel += '&skulist='; // Add in order ID
 
@@ -188,15 +204,15 @@ function runLinksharePixelScript() {
         // Generate a pipe-delimited ('|') list of amounts for each item, in the same order as the skulist and qlist above
         for (var i = 0; i < Object.keys(digitalData.bag.products).length; i++) {
           if (i != Object.keys(digitalData.bag.products).length - 1) { // If i is not the last element in the array, then add a pipe ('|')
-            linkshareTrackingPixel += (Math.floor(digitalData.bag.products[i].price * 0.833333 * 100)) + '|'; // Multiply by 0.833333 to remove VAT
+            linkshareTrackingPixel += (Math.floor(digitalData.bag.products[i].price / salesTaxMultiplier * 100)) + '|'; // Divide by a country-specific decimal to remove sales tax.
           }
           else {
-            linkshareTrackingPixel += Math.floor(digitalData.bag.products[i].price * 0.833333 * 100);
+            linkshareTrackingPixel += Math.floor(digitalData.bag.products[i].price / salesTaxMultiplier * 100);
           }
         }
 
         if (userReceivedAPromocodeDiscount == true) {
-          linkshareTrackingPixel += '|' + Math.floor(userPromocodeDiscountAmount * 0.833333 * 100).toString();
+          linkshareTrackingPixel += '|' + Math.floor(userPromocodeDiscountAmount / salesTaxMultiplier * 100).toString();
         }
 
         // Add in currency of this order
