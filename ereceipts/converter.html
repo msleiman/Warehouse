@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+  <meta charset='utf-8'>
+  <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+  <meta name='viewport' content='width=device-width, initial-scale=1'>
+  <title>eReceipt Mail Exporter</title>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css" integrity="sha384-fLW2N01lMqjakBkx3l/M9EahuwpSfeNvV63J5ezn3uZzapT0u7EYsXMjQV+0En5r" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://bootswatch.com/yeti/bootstrap.min.css" media="screen" title="no title" charset="utf-8">
+  <!-- <link rel="stylesheet" href="css/promo_code_converter.css" media="screen" title="no title" charset="utf-8"> -->
+</head>
+<body>
+
+  <div class="container">
+    <div class="row">
+      <div class="col-md-push-3 col-md-6">
+        <div class="panel panel-default">
+          <div class="panel-heading">eReceipt Mail Exporter</div>
+          <div class="panel-body">
+            <form id="form_code_converter">
+              <fieldset id="form_code_converter_wrapper" >
+                <div class="form-group">
+                  <label for="inputFile">eReceipt file:</label>
+                  <input type="file" id="inputFile">
+                </div>
+                <p class="help-block">Brand:</p>
+                <div class="radio">
+                  <label>
+                    <input type="radio" name="brand" id="brand_oasis" value="OASIS" checked>
+                    Oasis
+                  </label>
+                </div>
+                <div class="radio">
+                  <label>
+                    <input type="radio" name="brand" id="brand_warehouse" value="WAREHOUSE">
+                    Warehouse
+                  </label>
+                </div>
+                <p class="help-block">Covert to:</p>
+                <div class="radio">
+                  <label>
+                    <input type="radio" name="format" id="format_mailchimp" value="mailchimp" checked>
+                    Mailchimp
+                  </label>
+                </div>
+                <div class="radio">
+                  <label>
+                    <input type="radio" name="format" id="format_edialog" value="edialog">
+                    eDialog
+                  </label>
+                </div>
+                <button type="submit" class="btn btn-default">Convert</button>
+              </fieldset>
+            </form>
+            <div id="form_result"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+  <script src="js/lib/FileSaver.js" charset="utf-8"></script>
+  <script src="js/converter.js" charset="utf-8"></script>
+</body>
+</html>
