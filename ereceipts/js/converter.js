@@ -8,6 +8,26 @@ $('#form_code_converter').submit(function(e) {
   onFormSubmit();
 });
 
+function getSelectedBrand() {
+  if ( $('#brand_warehouse').is(':checked') ) {
+    return 'WH';
+  }
+
+  else if ( $('#brand_oasis').is(':checked') ) {
+    return 'OA';
+  }
+}
+
+function getSelectedBrand() {
+  if ( $('#brand_warehouse').is(':checked') ) {
+    return 'WH';
+  }
+
+  else if ( $('#brand_oasis').is(':checked') ) {
+    return 'OA';
+  }
+}
+
 function checkBrowserCompatibility(argument) {
   // Check for the various File API support.
   if (window.File && window.FileReader && window.FileList && window.Blob) {
@@ -57,7 +77,7 @@ function exportToMailChimp(eReceiptLines) {
   var email = '';
   var name = '';
   var emailList = '';
-  var processed_codes_start = '"Email Address","First Name"';
+  var processed_codes_start = '"Brand","Email Address","First Name"';
   var processed_codes_end = "";
 
   $.each(eReceiptLines, function(index, receipt) {
@@ -75,7 +95,8 @@ function exportToMailChimp(eReceiptLines) {
         (ValidateEmail(receipt.identifier))
       ) {
         email = receipt.identifier;
-        emailList = emailList + '\n'+ email + ',' + name ;
+
+        emailList += '\n'+ getSelectedBrand() + ',' + email + ',' + name ;
       }
     } catch (e) {
       console.log('String is not in JSON format.');
