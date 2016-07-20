@@ -1,0 +1,65 @@
+body {
+  font-family: 'Helvetica Neue';
+  font-weight: 400;
+  -webkit-font-smoothing: antialiased;
+  letter-spacing: 0.2px;
+}
+
+.content_wrapper {
+  padding: 3px 20px 0px;
+}
+
+.header_content_slot {
+  border-bottom: none;
+}
+
+header .header_links {
+  padding: 7px 0px 5px;
+}
+
+header .header_links ul>li {
+  text-transform: none;
+}
+
+header .header_links ul .link_label {
+  color: black;
+  font-weight: 400;
+}
+
+header #logo {
+  display: block;
+  width: 255px;
+  position: relative;
+  left: 0px;
+  bottom: 0px;
+  z-index: 100;
+  margin: 0 auto;
+  padding: 20px 0px;
+}
+
+#navigation {
+  margin: 0 auto 20px;
+  float: none;
+  text-align: center;
+}
+
+#navigation nav ul>li+li {
+  margin: 0 10px;
+}
+
+#navigation nav ul>li a {
+  font-weight: 400;
+  text-transform: none;
+  padding: 9px 30px 8px;
+}
+
+#navigation nav ul>li#in_house a {
+  border-right: 1px solid black;
+}
+
+#navigation nav ul>li#search i {
+  position: relative;
+  top: 5px;
+  font-size: 21px;
+  left: -5px;
+}
