@@ -1,5 +1,10 @@
 $(function(){
 
+  // Temporary fix for the Zopim 'Help' button being hidden. Remove when the fix is committed into production via dmw-inhouse.js in the repo.
+  $('#header-help-link').click(function(){
+    $('#launcher').css('cssText', 'display: inline !important; height:60px;');
+  });
+
   // When a user searches, fire a virtual pageview if the search term redirects to a static page instead of a search results page.
   // Create an object containing the search rules for the site (in the format 'searchTerm': 'redirectURL')
   var searchRules = {

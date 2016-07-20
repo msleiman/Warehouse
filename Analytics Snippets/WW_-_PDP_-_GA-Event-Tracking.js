@@ -1,5 +1,8 @@
 $(function(){
 
+  var eightDigitSKU = $('.updatingPdpMainsku').text().trim();
+  var sixDigitSKU = eightDigitSKU.substring(0,6);
+
   // Clicking on a Baynote recommended product
   $('body').on('click', '#recommended-products .baynote-pod-list-item', function(){
     var clickedBaynoteRecommendedProduct = $(this).find('.product-tile').attr('data-itemid').substring(0,8);
@@ -8,13 +11,23 @@ $(function(){
 
   // Save item
   $('body').on('click', '.product_details .save_for_later', function() {
-    var eventLabel = $('.updatingPdpMainsku').text().trim();
     ga(
       'main.send',
       'event',
       'Save item',
       'Item page',
-      eventLabel
+      eightDigitSKU
+    );
+  });
+
+  // Track when a video thumbnail is clicked on
+  $('body').on('click', '.videothumbnail', function(){
+    ga(
+      'main.send',
+      'event',
+      'Play video',
+      'Item page',
+      eightDigitSKU
     );
   });
 
