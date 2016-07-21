@@ -82,12 +82,12 @@ $(function(){
 							ga('main.send', 'event', 'Quick buy', 'Click', eightDigitSKU);
 
 							// Coremetrics tracking
-							/* cmCreateShopAction5Tag(
+							cmCreateShopAction5Tag(
 			          eightDigitSKU,
 			          productName,
 			          "1",
 			          productPrice
-			        ); */
+			        );
 
 							window.setLastAddToBagEventTimestampCookie(); // Set a cookie that contains a timestamp for this add to bag event. This function is set in Sitewide - Linkshare JS file.
 						});
