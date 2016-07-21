@@ -8,26 +8,6 @@ $('#form_code_converter').submit(function(e) {
   onFormSubmit();
 });
 
-function getSelectedBrand() {
-  if ( $('#brand_warehouse').is(':checked') ) {
-    return 'WH';
-  }
-
-  else if ( $('#brand_oasis').is(':checked') ) {
-    return 'OA';
-  }
-}
-
-function getSelectedBrand() {
-  if ( $('#brand_warehouse').is(':checked') ) {
-    return 'WH';
-  }
-
-  else if ( $('#brand_oasis').is(':checked') ) {
-    return 'OA';
-  }
-}
-
 function checkBrowserCompatibility(argument) {
   // Check for the various File API support.
   if (window.File && window.FileReader && window.FileList && window.Blob) {
@@ -77,26 +57,36 @@ function exportToMailChimp(eReceiptLines) {
   var email = '';
   var name = '';
   var emailList = '';
-  var processed_codes_start = '"Brand","Email Address","First Name"';
+  var processed_codes_start = '"Brand","Email Address","First Name","Transaction ID","Store reference","Date","Basket value","Product list (SKU)","Marketing opt in status (True or False)"';
   var processed_codes_end = "";
+  var brand = $('input[name=brand]:checked').val();
 
-  $.each(eReceiptLines, function(index, receipt) {
+  $(eReceiptLines).each(function(index, receipt) {
     try {
       receipt = JSON.parse(receipt);
       // Coupon codes have 7 parameters in Fresca
-      if (
-        (typeof receipt.properties.first_name != 'undefined') &&
-        (ValidateEmail(receipt.properties.first_name))
-      ) {
-        name = receipt.properties.first_name;
-      }
       if (
         (typeof receipt.identifier != 'undefined') &&
         (ValidateEmail(receipt.identifier))
       ) {
         email = receipt.identifier;
+        name = receipt.properties.first_name;
+        transaction_id = receipt.transaction_id;
+        store_reference = receipt.store_reference;
+        date = receipt.timestamp.substring(0,10);
+        basket_value = receipt.total;
 
-        emailList += '\n'+ getSelectedBrand() + ',' + email + ',' + name ;
+        // Get a pipe separated list of SKUs in this order
+        var SkuString = '';
+
+        for (var item in receipt.items) {
+          console.log(receipt.items[item].properties.product_code);
+          SkuString += receipt.items[item].properties.product_code + '|'
+        }
+
+        product_list = SkuString.substring(0, SkuString.length - 1);
+        marketing_opt_in = receipt.properties.opt_in;
+        emailList += '\n'+ brand + ',' + email + ',' + name + ',' + transaction_id + ',' + store_reference + ',' + date + ',' + basket_value + ',' + product_list + ',' + marketing_opt_in;
       }
     } catch (e) {
       console.log('String is not in JSON format.');
@@ -111,7 +101,7 @@ function exportToEDialog(eReceiptLines) {
   var email = '';
   var name = '';
   var emailList = '';
-  var processed_codes_start = 'CID	EMAIL	BRAND';
+  var processed_codes_start = 'CID	BRAND EMAIL	NAME TRANSACTION_ID STORE_REFERENCE DATE BASKET_VALUE PRODUCT_LIST MARKETING_OPT_IN';
   var processed_codes_end = "";
   var brand = $('input[name=brand]:checked').val();
 
@@ -120,17 +110,27 @@ function exportToEDialog(eReceiptLines) {
       receipt = JSON.parse(receipt);
       // Coupon codes have 7 parameters in Fresca
       if (
-        (typeof receipt.properties.first_name != 'undefined') &&
-        (ValidateEmail(receipt.properties.first_name))
-      ) {
-        name = receipt.properties.first_name;
-      }
-      if (
         (typeof receipt.identifier != 'undefined') &&
         (ValidateEmail(receipt.identifier))
       ) {
         email = receipt.identifier;
-        emailList = emailList + '\n	'+ email + '	' + name + '	' + brand;
+        name = receipt.properties.first_name;
+        transaction_id = receipt.transaction_id;
+        store_reference = receipt.store_reference;
+        date = receipt.timestamp.substring(0,10);
+        basket_value = receipt.total;
+
+        // Get a pipe separated list of SKUs in this order
+        var SkuString = '';
+
+        for (var item in receipt.items) {
+          console.log(receipt.items[item].properties.product_code);
+          SkuString += receipt.items[item].properties.product_code + '|'
+        }
+
+        product_list = SkuString.substring(0, SkuString.length - 1);
+        marketing_opt_in = receipt.properties.opt_in;
+        emailList += '\n'+ brand + ',' + email + ',' + name + ',' + transaction_id + ',' + store_reference + ',' + date + ',' + basket_value + ',' + product_list + ',' + marketing_opt_in;
       }
     } catch (e) {
       console.log('String is not in JSON format.');
