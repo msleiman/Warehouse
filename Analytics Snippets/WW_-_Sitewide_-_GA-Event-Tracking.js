@@ -82,6 +82,17 @@ $(function(){
     ga('rollUp.send', 'pageview', vpvURL);
   });
 
+  // When user clicks on top logo
+  $('body').on('click', 'a#logo', function(){
+    ga(
+      'main.send',
+      'event',
+      'Header',
+      'Click',
+      'Logo'
+    );
+  });
+
   $( '.header_navigation' ).on( 'click', 'li.subsubitems > ul > li > a', function(){
     var eventAction = $(this).text().trim().toLowerCase();
     var eventLabel = 'Category';
