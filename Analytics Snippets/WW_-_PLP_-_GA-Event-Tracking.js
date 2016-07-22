@@ -88,6 +88,7 @@ $(function(){
 			          "1",
 			          productPrice
 			        );
+							cmDisplayShop5s();
 
 							window.setLastAddToBagEventTimestampCookie(); // Set a cookie that contains a timestamp for this add to bag event. This function is set in Sitewide - Linkshare JS file.
 						});
