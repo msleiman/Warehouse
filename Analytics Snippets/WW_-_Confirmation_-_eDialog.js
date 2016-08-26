@@ -4,23 +4,8 @@
 
   /* START EDIALOG UTIL FUNCTIONS */
 
-  function storeEDID() {
-    var thirtyDays = (60 * 60 * 1000 * 24) * 30;
-    var vals = document.location.search;
-    var start = vals.indexOf("EDID=");
-    if (start != -1) {
-      var end = vals.indexOf("&", start);
-      if (end == -1) {
-        end = vals.length;
-      }
-      var date = new Date();
-      date.setTime(date.getTime() + thirtyDays);
-      document.cookie = vals.substring(start, end) + "; expires=" + date.toGMTString() + "; path=/";
-    }
-  }
-
   function getEDID() {
-    var n = "EDID=";
+    var n = "ed198816550=";
     var cookies = document.cookie;
     var start = cookies.indexOf(n);
     if (start == -1) {
@@ -51,18 +36,20 @@
   // Map the array of products in the order into a string to be used in the tracking pixel.
   var productSkuString = '';
 
-  for (var i = 0; i < digitalData.products.length; i++) {
-    productSkuString += 'row=' + (i + 1) + '&id=' + digitalData.products[i].id.substring(0, 8) + '&';
-    productSkuString += 'quantity=' + digitalData.products[i].quantity + '&';
-    productSkuString += 'price=' + digitalData.products[i].price + '|';
+  if ( digitalData.bag.products != 'undefined' ) {
+    for (var i = 0; i < digitalData.bag.products.length; i++) {
+      productSkuString += 'row=' + (i + 1) + '&id=' + digitalData.bag.products[i].id.substring(0, 8) + '&';
+      productSkuString += 'quantity=' + digitalData.bag.products[i].quantity + '&';
+      productSkuString += 'price=' + digitalData.bag.products[i].price + '|';
+    }
+
+    // Remove trailing pipe ('|') from product SKU string and urlencode it.
+    productSkuString = encodeURIComponent(productSkuString.slice(0, -1));
+
+    edialogString = initialString + productSkuString;
+    console.log(edialogString);
+
+    trackEDID(edialogString);
   }
-
-  // Remove trailing pipe ('|') from product SKU string and urlencode it.
-  productSkuString = encodeURIComponent(productSkuString.slice(0, -1));
-
-  edialogString = initialString + productSkuString;
-  // console.log(edialogString);
-
-  trackEDID(edialogString);
 
 }());
