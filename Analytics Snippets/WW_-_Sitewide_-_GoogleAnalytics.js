@@ -105,34 +105,49 @@ if ( (digitalData.page.instanceID.indexOf('_Cart') >= 0) || (digitalData.page.in
   // The page is Basket/Cart, Checkout or Order Confirmation page. We have VPVs for these pages - do not fire regular pageviews.
 }
 
-else if ( window.location.pathname.indexOf('/blog') >= 0 ) { // If we are on a blog page, send a page view with correct titles.
+else {
+
+  if ( window.location.pathname.indexOf('/blog') >= 0 ) { // If we are on a blog page, send a page view with correct titles.
+    var pageTitle = document.title;
+  }
+  else {
+    var pageTitle = digitalData.page.title;
+  }
+
+  // If on a PDP, send a Product Details View to GA
+  if ( digitalData.page.type == 'PDP' ) {
+    ga('main.ec:addProduct', {
+      'id': digitalData.page.product.id,
+      'name': digitalData.page.product.name,
+      'category': digitalData.page.product.masterCategory,
+      'variant': digitalData.page.product.colour
+    });
+
+    ga('main.ec:setAction', 'detail');
+
+    ga('rollUp.ec:addProduct', {
+      'id': digitalData.page.product.id,
+      'name': digitalData.page.product.name,
+      'category': digitalData.page.product.masterCategory,
+      'variant': digitalData.page.product.colour
+    });
+
+    ga('rollUp.ec:setAction', 'detail');
+  }
+
+
   ga('main.send', {
     hitType: 'pageview',
     page: digitalData.page.canonical || digitalData.page.url,
     location: location.href,
-    title: document.title
+    title: pageTitle
   });
 
   ga('rollUp.send', {
     hitType: 'pageview',
     page: digitalData.page.canonical || digitalData.page.url,
     location: location.href,
-    title: document.title
-  });
-}
-
-else { // If the page is a regular websit page, send a pageview
-  ga('main.send', {
-    hitType: 'pageview',
-    page: digitalData.page.canonical || digitalData.page.url,
-    location: location.href,
-    title: digitalData.page.title
+    title: pageTitle
   });
 
-  ga('rollUp.send', {
-    hitType: 'pageview',
-    page: digitalData.page.canonical || digitalData.page.url,
-    location: location.href,
-    title: digitalData.page.title
-  });
 }

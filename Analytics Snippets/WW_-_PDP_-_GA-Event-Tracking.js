@@ -190,6 +190,7 @@ $(function(){
     setTimeout(function () {
       if ( ($('.select-product-size-message').length === 0) || ($('a#onesize').text().trim() == 'Unsized') ) {
         var eventLabel = $('.updatingPdpMainsku').text().trim();
+
         ga('main.ec:addProduct',{
           'id': digitalData.page.product.id.substring(0,8),
           'name': digitalData.page.product.name,
@@ -199,6 +200,21 @@ $(function(){
         ga('main.ec:setAction', 'add');
         ga(
           'main.send',
+          'event',
+          'Add to bag',
+          'Submit',
+          eventLabel
+        );
+
+        ga('rollUp.ec:addProduct',{
+          'id': digitalData.page.product.id.substring(0,8),
+          'name': digitalData.page.product.name,
+          'category': digitalData.page.product.masterCategory,
+          'variant': digitalData.page.product.id.substring(0,8).slice(-2) // Last two digits of SKU = colour ID
+        });
+        ga('rollUp.ec:setAction', 'add');
+        ga(
+          'rollUp.send',
           'event',
           'Add to bag',
           'Submit',

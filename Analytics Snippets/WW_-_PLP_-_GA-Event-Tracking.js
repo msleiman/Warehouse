@@ -208,6 +208,26 @@ $(function(){
 		  }
 		});
 
-	});
+		$('body').one('click', '.top_filters a', function(){
+			if ( $(this).attr('data-imagesize')  && !$(this).hasClass('active') ) { // If the filter that controls image size is clicked and it is not the active one, fire event
+				ga(
+					'main.send',
+					'event',
+					'PLP Image Size',
+					'Click',
+					$(this).text()
+				);
+
+				ga(
+					'rollUp.send',
+					'event',
+					'PLP Image Size',
+					'Click',
+					$(this).text()
+				);
+			}
+		});
+
+	}); // end doc ready function
 
 });
