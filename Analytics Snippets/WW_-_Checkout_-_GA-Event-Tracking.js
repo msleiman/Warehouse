@@ -69,7 +69,10 @@ $(function(){
 
 	// Report the stage the user is at when they proceed through Checkout
 	// Step 1: Delivery
-	if ($('.checkout-progress-indicator .active span span').text() == 'Delivery') {
+	if (
+			($('.checkout-progress-indicator .active span span').text().trim() == 'Delivery') ||
+			($('.checkout-progress-indicator .active span span').text().trim() == 'Shipping')
+		) {
 
 		ga('main.ec:setAction','checkout', {'step': 3});
 		ga('rollUp.ec:setAction','checkout', {'step': 3});
