@@ -5,6 +5,10 @@
   ga('main.ec:setAction','checkout', {'step': 6});
   ga('rollUp.ec:setAction','checkout', {'step': 6});
 
+  // Set currency
+  ga('main.set', '&cu', digitalData.site.currency);
+  ga('rollUp.set', '&cu', digitalData.site.currency);
+
   // Set delivery option as custom dimension
   ga( 'main.set', { 'dimension7': digitalData.delivery.id } );
   ga( 'rollUp.set', { 'dimension7': digitalData.delivery.id } );
