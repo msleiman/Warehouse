@@ -1,0 +1,20 @@
+<script>
+  $(document).ready(function(){
+
+    // List an array of eight digit SKUs to remove.
+    var arrayOfSKUsToRemoveFromPLP = ["02642072", "02687210", "02687236", "02733850"];
+
+    // Run every 200ms to catch any new items being added into the PLP.
+    setInterval(function(){
+      $('li.grid-tile').each(function(){
+        for (var i = 0; i < arrayOfSKUsToRemoveFromPLP.length; i++) {
+          // If the colour code of the item on the PLP matches the last 2 digits of any item in the array of SKUs, remove it.
+          if ( $(this).attr('data-colors-to-show') == arrayOfSKUsToRemoveFromPLP[i].slice(-2) ) {
+            $(this).remove();
+          }
+        }
+      });
+    }, 200);
+
+  });
+</script>
