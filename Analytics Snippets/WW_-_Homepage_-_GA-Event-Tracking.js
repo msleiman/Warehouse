@@ -1,5 +1,49 @@
 $(function() {
 
+  ga('main.ec:addPromo', {
+    'id': $('#top-hero a').attr('href'),
+    'name': 'Hero',
+    'creative': $('#top-hero a').attr('data-ga-creative'),
+    'position': '1'
+  });
+
+  ga('main.ec:addPromo', {
+    'id': $('.parallax-window a').attr('href'),
+    'name': 'Below 1',
+    'creative': $('.parallax-window').attr('data-ga-creative'),
+    'position': '2'
+  });
+
+  ga('main.ec:addPromo', {
+    'id': $('.lookbook-carousel-item a').attr('href'),
+    'name': $('.lookbook-carousel-item a').attr('data-ga-action'),
+    'creative': $('.parallax-window').attr('data-ga-creative'),
+    'position': '3'
+  });
+
+  ga('main.ec:addPromo', {
+    'id': $('.homepage-split-video-flexslider a').attr('href'),
+    'name': 'Below 2',
+    'creative': $('.homepage-split-video-flexslider a').attr('data-ga-creative'),
+    'position': '5'
+  });
+
+  ga('main.send', {
+    hitType: 'pageview',
+    page: digitalData.page.canonical || digitalData.page.url,
+    location: location.href,
+    title: digitalData.page.title
+  });
+
+  ga('rollUp.send', {
+    hitType: 'pageview',
+    page: digitalData.page.canonical || digitalData.page.url,
+    location: location.href,
+    title: digitalData.page.title
+  });
+
+/* ------------------ CLICK EVENTS ----------------- */
+
   // Clicking on a homepage section
   $('#top-hero a').click(function(){
     ga('main.ec:addPromo',{

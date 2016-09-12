@@ -104,9 +104,14 @@ if (digitalData.customer.id.indexOf('@') > 0) {
   digitalData.customer.id = '';
 }
 
-// Send pageviews ONLY IF the page is not a Basket/Cart, Checkout or Order Confirmation page.
-if ( (digitalData.page.instanceID.indexOf('_Cart') >= 0) || (digitalData.page.instanceID.indexOf('_Checkout') >= 0) || (digitalData.page.instanceID.indexOf('_OrderConfirmation') >= 0) ) {
-  // The page is Basket/Cart, Checkout or Order Confirmation page. We have VPVs for these pages - do not fire regular pageviews.
+// Send pageviews ONLY IF the page is not a Home, Basket/Cart, Checkout or Order Confirmation page.
+if (
+  (digitalData.page.instanceID.indexOf('_Home') >= 0) ||
+  (digitalData.page.instanceID.indexOf('_Cart') >= 0) ||
+  (digitalData.page.instanceID.indexOf('_Checkout') >= 0) ||
+  (digitalData.page.instanceID.indexOf('_OrderConfirmation') >= 0)
+) {
+  // The page is Home, Basket/Cart, Checkout or Order Confirmation page. We have VPVs or separate GA tracking for these pages - do not fire regular pageviews.
 }
 
 else {
