@@ -99,8 +99,12 @@ if (row) {
 window.optimizely = window.optimizely || [];
 window.optimizely.push("activateUniversalAnalytics");
 
-// Send pageviews ONLY IF the page is not a Basket/Cart, Checkout or Order Confirmation page.
+// Temporary fix to remove customer email addresses from being sent to Google.
+if (digitalData.customer.id.indexOf('@') > 0) {
+  digitalData.customer.id = '';
+}
 
+// Send pageviews ONLY IF the page is not a Basket/Cart, Checkout or Order Confirmation page.
 if ( (digitalData.page.instanceID.indexOf('_Cart') >= 0) || (digitalData.page.instanceID.indexOf('_Checkout') >= 0) || (digitalData.page.instanceID.indexOf('_OrderConfirmation') >= 0) ) {
   // The page is Basket/Cart, Checkout or Order Confirmation page. We have VPVs for these pages - do not fire regular pageviews.
 }
@@ -134,7 +138,6 @@ else {
 
     ga('rollUp.ec:setAction', 'detail');
   }
-
 
   ga('main.send', {
     hitType: 'pageview',
