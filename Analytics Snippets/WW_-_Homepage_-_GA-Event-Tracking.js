@@ -1,15 +1,15 @@
 $(function() {
 
   // Clicking on a homepage section
-  $('#top-hero').click(function(){
+  $('#top-hero a').click(function(){
     ga('main.ec:addPromo',{
-      'id': $(this).find('a').attr('href'),
+      'id': $(this).attr('href'),
       'name': 'Hero',
-      'creative': $('#top-hero').attr('data-ga-creative'),
+      'creative': $(this).attr('data-ga-creative'),
       'position': '1'
     });
     ga('main.ec:setAction', 'promo_click');
-    ga('main.send', 'event', 'Homepage', 'Hero', $(this).find('a').attr('href'));
+    ga('main.send', 'event', 'Homepage', 'Hero', $(this).attr('href'));
   });
 
   $('.parallax-window a').click(function(){
