@@ -2,11 +2,36 @@ $(function(){
 
 	// Report a VPV to GA when more products are loaded onto the screen from infinite scroll.
 	$(window).load(function(){
+
 		// Collect an initial number of products displayed on the page.
-		var numberOfProductsShown = $('li.grid-tile').length;
-		$(window).scroll(function(){
-			if ($('li.grid-tile').length > numberOfProductsShown) {
-				numberOfProductsShown = $('li.grid-tile').length;
+		var numberOfProductsLoadedSoFar = $('li.grid-tile').length;
+
+		// Send initial collection of products to GA. NOTE: Javelin have the class name for items on the first page as being 'page_0', not 'page_1'. By contrast, we use a currentPageNumber variable of 1 for the first page.
+		function collectNewProductImpressions(latestPageNumber) {
+			latestPageNumber -= 1; // Subtract 1 because Javelin use the class 'page_0' for products belonging to the first page of results.
+			$('li.grid-tile').each(function(index){
+				// Some items in the grid are not products, so check for that. Additionally, we only want to send newly loaded items, so only add impressions for newly loaded items.
+				if ( ( $(this).attr('data-colors-to-show') != undefined) && ( $(this).hasClass('page_' + latestPageNumber) )) {
+					ga('main.ec:addImpression', {
+						'id': $(this).find('.product-tile').attr('data-firstproductid').substr(0,8),
+						'name': $(this).find('a.name-link').text().trim(),
+						'category': digitalData.page.category.id,
+						'position': index + 1
+					});
+				}
+			});
+		}
+
+		// Semd initial product impressions.
+		var latestPageNumber = 1; // Set the highest page number viewed so far on this page. This is so we do not send impressions multiple times for the same product.
+		collectNewProductImpressions(latestPageNumber);
+		ga('main.send', 'event', 'PLP', 'Page initial load', 'Page ' + latestPageNumber, {
+			nonInteraction: true
+		});
+
+		$(window).scroll(function(){ // When the user scrolls, check to see if more products have been added in by infinite scroll
+			if ($('li.grid-tile').length > numberOfProductsLoadedSoFar) {
+				numberOfProductsLoadedSoFar = $('li.grid-tile').length;
 
 				// If the user is on a search results page, send different events as search has the search term as the parameter as well as the page number.
 				if (window.location.href.indexOf('search') >= 0) {
@@ -16,6 +41,13 @@ $(function(){
 					else {
 						var currentPageNumber = '1'; // If no page number set in URL, set it to 1.
 					}
+
+					// Check to see if the DOM has any new items added to it. Remember, the classes used in the DOM (e.g.page_0) are 1 less than the currentPageNumber, so just use the currentPageNumber to express the next batch of products.
+					if ( $('li.page_' + latestPageNumber).length > 0) {
+						latestPageNumber += 1;
+						collectNewProductImpressions(latestPageNumber);
+					}
+
 					ga('main.send', 'pageview', document.location.pathname + '/vpv/length/' + currentPageNumber);
 			    ga('rollUp.send', 'pageview', document.location.pathname + '/vpv/length/' + currentPageNumber);
 				}
@@ -27,6 +59,13 @@ $(function(){
 					else {
 						var currentPageNumber = '1'; // If no page number set in URL, set it to 1.
 					}
+
+					// Check to see if the DOM has any new items added to it. Remember, the classes used in the DOM (e.g.page_0) are 1 less than the currentPageNumber, so just use the currentPageNumber to express the next batch of products.
+					if ( $('li.page_' + latestPageNumber).length > 0) {
+						latestPageNumber += 1;
+						collectNewProductImpressions(latestPageNumber);
+					}
+
 					ga('main.send', 'pageview', document.location.pathname + 'vpv/length/' + currentPageNumber);
 			    ga('rollUp.send', 'pageview', document.location.pathname + 'vpv/length/' + currentPageNumber);
 				}
