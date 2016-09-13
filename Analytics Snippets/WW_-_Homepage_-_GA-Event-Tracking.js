@@ -15,9 +15,9 @@ $(function() {
   });
 
   ga('main.ec:addPromo', {
-    'id': $('.lookbook-carousel-item a').attr('href'),
-    'name': $('.lookbook-carousel-item a').attr('data-ga-action'),
-    'creative': $('.parallax-window').attr('data-ga-creative'),
+    'id': $('.lookbook-carousel-item:first-child a').attr('href'),
+    'name': $('.lookbook-carousel-item:first-child a').attr('data-ga-action'),
+    'creative': $('.lookbook-carousel-item:first-child a').attr('data-ga-creative'),
     'position': '3'
   });
 
@@ -26,6 +26,13 @@ $(function() {
     'name': 'Below 2',
     'creative': $('.homepage-split-video-flexslider a').attr('data-ga-creative'),
     'position': '5'
+  });
+
+  ga('main.ec:addPromo', {
+    'id': $('.emmas-edit-carousel-item:first-child a').attr('href'),
+    'name': $('.emmas-edit-carousel-item:first-child a').attr('data-ga-action'),
+    'creative': $('.emmas-edit-carousel-item:first-child a').attr('data-ga-creative'),
+    'position': '6'
   });
 
   ga('main.send', {
