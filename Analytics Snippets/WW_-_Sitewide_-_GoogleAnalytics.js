@@ -79,6 +79,11 @@ ga('rollUp.require', 'displayfeatures');
 ga('main.linker:autoLink', ['warehouse-london.com', 'andotherbrands.com']);
 ga('rollUp.linker:autoLink', ['warehouse-london.com', 'andotherbrands.com']);
 
+// Temporary fix to remove customer email addresses from being sent to Google.
+if (digitalData.customer.id.indexOf('@') > 0) {
+  digitalData.customer.id = '';
+}
+
 if (typeof(digitalData) != 'undefined' && typeof(digitalData.customer) != 'undefined' && typeof(digitalData.customer.id) != 'undefined') {
   ga('main.set', 'userId', digitalData.customer.id);
   ga('rollUp.set', 'userId', digitalData.customer.id);
@@ -98,11 +103,6 @@ if (row) {
 
 window.optimizely = window.optimizely || [];
 window.optimizely.push("activateUniversalAnalytics");
-
-// Temporary fix to remove customer email addresses from being sent to Google.
-if (digitalData.customer.id.indexOf('@') > 0) {
-  digitalData.customer.id = '';
-}
 
 // Send pageviews ONLY IF the page is not a Home, Basket/Cart, Checkout or Order Confirmation page.
 if (
