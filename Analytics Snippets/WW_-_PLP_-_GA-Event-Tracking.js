@@ -16,13 +16,14 @@ $(function(){
 						'id': $(this).find('.product-tile').attr('data-firstproductid').substr(0,8),
 						'name': $(this).find('a.name-link').text().trim(),
 						'category': digitalData.page.category.id,
+						'list': 'PLP',
 						'position': index + 1
 					});
 				}
 			});
 		}
 
-		// Semd initial product impressions.
+		// Send initial product impressions.
 		var latestPageNumber = 1; // Set the highest page number viewed so far on this page. This is so we do not send impressions multiple times for the same product.
 		collectNewProductImpressions(latestPageNumber);
 		ga('rollUp.send', 'event', 'PLP', 'Page initial load', 'Page ' + latestPageNumber, {
@@ -96,10 +97,12 @@ $(function(){
 				ga( 'main.set', { 'dimension5': 'hide' } );
 			}
 
-			ga( 'main.set', { 'dimension6': $( 'form[name="Product-Sorting-Options"] select option:selected' ).text().trim().toLowerCase().replace(/\s/g, '-') } );
-			var productImageURL = $( this ).parents( '.product-tile-grid' ).find( '.flex-active-slide .thumb-link > img' ).attr( 'src' );
-			var eightDigitSKU = productImageURL.split('/').pop().split('_')[1];
-			var sixDigitSKU = eightDigitSKU.substring(0,6);
+			ga( 'main.set', {
+				'dimension6': $( 'form[name="Product-Sorting-Options"] select option:selected' ).text().trim().toLowerCase().replace(/\s/g, '-')
+			});
+			var tenDigitSKU = $(this).parents('.product-tile-grid').find('.product-tile' ).attr('data-firstproductid');
+			var eightDigitSKU = tenDigitSKU.substring(0,8);
+			var sixDigitSKU = tenDigitSKU.substring(0,6);
 			var productName = $(".product-tile[data-itemid='" + sixDigitSKU + "']").find('a.name-link').attr('title');
 
 			// If the user has clicked to add the item to cart (i.e. Quick Buy)
