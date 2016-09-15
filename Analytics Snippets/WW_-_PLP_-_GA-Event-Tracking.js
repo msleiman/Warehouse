@@ -12,7 +12,7 @@ $(function(){
 			$('li.grid-tile').each(function(index){
 				// Some items in the grid are not products, so check for that. Additionally, we only want to send newly loaded items, so only add impressions for newly loaded items.
 				if ( ( $(this).attr('data-colors-to-show') != undefined) && ( $(this).hasClass('page_' + latestPageNumber) )) {
-					ga('main.ec:addImpression', {
+					ga('rollUp.ec:addImpression', {
 						'id': $(this).find('.product-tile').attr('data-firstproductid').substr(0,8),
 						'name': $(this).find('a.name-link').text().trim(),
 						'category': digitalData.page.category.id,
@@ -25,7 +25,7 @@ $(function(){
 		// Semd initial product impressions.
 		var latestPageNumber = 1; // Set the highest page number viewed so far on this page. This is so we do not send impressions multiple times for the same product.
 		collectNewProductImpressions(latestPageNumber);
-		ga('main.send', 'event', 'PLP', 'Page initial load', 'Page ' + latestPageNumber, {
+		ga('rollUp.send', 'event', 'PLP', 'Page initial load', 'Page ' + latestPageNumber, {
 			nonInteraction: true
 		});
 
@@ -44,7 +44,7 @@ $(function(){
 
 					// Check to see if the DOM has any new items added to it. Remember, the classes used in the DOM (e.g.page_0) are 1 less than the currentPageNumber, so just use the currentPageNumber to express the next batch of products.
 					if ( $('li.page_' + latestPageNumber).length > 0) {
-						latestPageNumber += 1;
+						latestPageNumber += 1; // Update the latest page number
 						collectNewProductImpressions(latestPageNumber);
 					}
 
