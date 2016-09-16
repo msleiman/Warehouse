@@ -100,29 +100,25 @@ $(function(){
 			ga( 'main.set', {
 				'dimension6': $( 'form[name="Product-Sorting-Options"] select option:selected' ).text().trim().toLowerCase().replace(/\s/g, '-')
 			});
-			var clickedProduct = $(this).parents('.product-tile-grid').find('.product-tile' )
-			var tenDigitSKU = $(clickedProduct).attr('data-firstproductid');
+			var tenDigitSKU = $(this).parents('.product-tile-grid').find('.product-tile' ).attr('data-firstproductid');
 			var eightDigitSKU = tenDigitSKU.substring(0,8);
-			var productName = $(clickedProduct).find('a.name-link').attr('title');
-			var productCurrentPrice = $(clickedProduct).find('.price-sales').text().trim().substring(1); // The product's current price (if on sale or not on sale)
-			var productOriginalPrice = $(clickedProduct).find('.price-standard').text().trim().substring(1) || ''; // If the product is on sale, this is the original price.
+			var sixDigitSKU = tenDigitSKU.substring(0,6);
+			var productName = $(".product-tile[data-itemid='" + sixDigitSKU + "']").find('a.name-link').attr('title');
 
 			// If the user has clicked to add the item to cart (i.e. Quick Buy)
 			if ( $(this).hasClass('quickviewbutton') ) {
 				console.log('quick buy button clicked');
 				setTimeout(function(){ // Set a delay to allow the Quick Buy modal to appear
 					var refreshInterval = setInterval(function(){
-						if ( $(clickedProduct).find('.action-addtocart.product-action.add-to-cart.button_primary').attr('title') == 'Add to Bag') {
-							$(clickedProduct).find('.action-addtocart.product-action.add-to-cart.button_primary').click(function(){
+						if ( $('.product-tile[data-itemid="' + sixDigitSKU + '"]').find('.action-addtocart.product-action.add-to-cart.button_primary').attr('title') == 'Add to Bag') {
+							$('.product-tile[data-itemid="' + sixDigitSKU + '"]').find('.action-addtocart.product-action.add-to-cart.button_primary').click(function(){
+							var productPrice = $('.product-tile[data-itemid="' + sixDigitSKU + '"]').find('.product-price span').first().text().trim().substring(1);
 
 							// GA tracking
 							ga('main.ec:addProduct', {
 								'id': 		eightDigitSKU,
 								'name': 	productName,
-								'category': digitalData.page.category.id,
-								'variant': eightDigitSKU.slice(-2), // Last two digits of SKU = colour ID
-								'price': productCurrentPrice,
-								'dimension12': productOriginalPrice
+								'category': digitalData.page.category.id
 							});
 							ga('main.ec:setAction', 'add');
 							ga('main.send', 'event', 'Quick buy', 'Click', eightDigitSKU);
@@ -132,7 +128,7 @@ $(function(){
 			          eightDigitSKU,
 			          productName,
 			          "1",
-			          productCurrentPrice
+			          productPrice
 			        );
 							cmDisplayShop5s();
 
