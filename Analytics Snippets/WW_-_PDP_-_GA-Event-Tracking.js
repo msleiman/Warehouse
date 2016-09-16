@@ -189,13 +189,14 @@ $(function(){
   $('.product_details').on('click', '.action-addtocart', function() {
     setTimeout(function () {
       if ( ($('.select-product-size-message').length === 0) || ($('a#onesize').text().trim() == 'Unsized') ) {
-        var eventLabel = $('.updatingPdpMainsku').text().trim();
 
         ga('main.ec:addProduct',{
-          'id': digitalData.page.product.id.substring(0,8),
+          'id': eightDigitSKU,
           'name': digitalData.page.product.name,
           'category': digitalData.page.product.masterCategory,
-          'variant': digitalData.page.product.id.substring(0,8).slice(-2) // Last two digits of SKU = colour ID
+          'variant': eightDigitSKU.slice(-2), // Last two digits of SKU = colour ID
+          'price': digitalData.page.product.price.now,
+          'dimension12': digitalData.page.product.price.was
         });
         ga('main.ec:setAction', 'add');
         ga(
@@ -203,14 +204,16 @@ $(function(){
           'event',
           'Add to bag',
           'Submit',
-          eventLabel
+          eightDigitSKU
         );
 
         ga('rollUp.ec:addProduct',{
-          'id': digitalData.page.product.id.substring(0,8),
+          'id': eightDigitSKU,
           'name': digitalData.page.product.name,
           'category': digitalData.page.product.masterCategory,
-          'variant': digitalData.page.product.id.substring(0,8).slice(-2) // Last two digits of SKU = colour ID
+          'variant': eightDigitSKU.slice(-2), // Last two digits of SKU = colour ID
+          'price': digitalData.page.product.price.now,
+          'dimension12': digitalData.page.product.price.was
         });
         ga('rollUp.ec:setAction', 'add');
         ga(
@@ -218,7 +221,7 @@ $(function(){
           'event',
           'Add to bag',
           'Submit',
-          eventLabel
+          eightDigitSKU
         );
         window.setLastAddToBagEventTimestampCookie(); // Set a cookie that contains a timestamp for this add to bag event. This function is set in Sitewide - Linkshare JS file.
       }
