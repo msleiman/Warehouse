@@ -192,10 +192,12 @@ $(function(){
         var eventLabel = $('.updatingPdpMainsku').text().trim();
 
         ga('main.ec:addProduct',{
-          'id': digitalData.page.product.id.substring(0,8),
+          'id': sixDigitSKU,
           'name': digitalData.page.product.name,
           'category': digitalData.page.product.masterCategory,
-          'variant': digitalData.page.product.id.substring(0,8).slice(-2) // Last two digits of SKU = colour ID
+          'variant': eightDigitSKU.slice(-2), // Last two digits of SKU = colour ID
+          'price': digitalData.page.product.price.now,
+          'dimension12': digitalData.page.product.price.was
         });
         ga('main.ec:setAction', 'add');
         ga(
@@ -207,10 +209,12 @@ $(function(){
         );
 
         ga('rollUp.ec:addProduct',{
-          'id': digitalData.page.product.id.substring(0,8),
+          'id': sixDigitSKU,
           'name': digitalData.page.product.name,
           'category': digitalData.page.product.masterCategory,
-          'variant': digitalData.page.product.id.substring(0,8).slice(-2) // Last two digits of SKU = colour ID
+          'variant': eightDigitSKU.slice(-2), // Last two digits of SKU = colour ID
+          'price': digitalData.page.product.price.now,
+          'dimension12': digitalData.page.product.price.was
         });
         ga('rollUp.ec:setAction', 'add');
         ga(
